@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khu Vườn 8/3 Phát Sáng</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&family=Pacifico&family=Playball&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <audio id="bg-music" src="./Audio/eren.mp3"></audio>
+
+    <div id="intro-screen" class="intro-container">
+        <div class="intro-content">
+            <h1 class="intro-title">Chào bạn!</h1>
+            <p>Trước khi bắt đầu, hãy cho mình biết tên của bạn nhé:</p>
+            <input type="text" id="username-input" placeholder="Nhập tên của bạn..." autocomplete="off">
+            <button id="start-btn">Bắt đầu 🌸</button>
+        </div>
+    </div>
+
+    <div class="ground" id="ground">
+        </div>
+
+    <div id="wish-popup" class="hidden">
+        <div class="wish-content">
+            <span id="close-wish">&times;</span>
+            <h3 id="wish-title">💌 Gửi tặng cậu</h3>
+            <p id="wish-text"></p>
+        </div>
+    </div>
+
+    <script src="./script.js"></script>
+</body>
+</html>
