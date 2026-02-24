@@ -14,7 +14,7 @@ const wishes = [
 ];
 
 const ground = document.getElementById('ground');
-const numFlowers = 108; // Đã tăng lên 50 bông hoa
+const numFlowers = 70; // Đã tăng lên 50 bông hoa
 const isMobile = window.innerWidth < 768;
 const sizeMultiplier = isMobile ? 1.8 : 1; 
 
@@ -49,8 +49,8 @@ const flowerHTML = `
 // =========================================
 // 2. CHIA LƯỚI TỌA ĐỘ ĐỂ HOA MỌC ĐỀU
 // =========================================
-const rows = isMobile ? 12 : 9; 
-const cols = isMobile ? 9 : 12; 
+const rows = isMobile ? 10 : 7; 
+const cols = isMobile ? 7 : 10; 
 const cellWidth = 98 / cols; 
 const heightRange = isMobile ? 52 : 42; 
 const startTop = isMobile ? 43 : 53;

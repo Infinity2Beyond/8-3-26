@@ -282,28 +282,22 @@ body::before {
 /* Rút ngắn thời gian mọc thân từ 3s xuống 1.5s */
 .animate .flower-stem { animation: stem-grow 1.5s ease-in forwards; }
 
-.animate .flower-circle { animation: grass-grow 0.25s ease-in forwards 1.5s; }
-.animate .flower-petal { animation: petal-grow 0.3s ease-in forwards, flower-rotate 3s linear infinite; }
+.animate .flower-circle { 
+    animation: circle-soft-bloom 1s ease-out forwards 1.5s;
+}
 
-/* Cánh hoa bung ra nối tiếp nhau nhanh hơn */
-.animate .flower-petal__3 { animation-delay: 1.7s; }
-.animate .flower-petal__2 { animation-delay: 1.8s; }
-.animate .flower-petal__4 { animation-delay: 1.9s; }
-.animate .flower-petal__7 { animation-delay: 2.0s; }
-.animate .flower-petal__8 { animation-delay: 2.1s; }
-.animate .flower-petal__6 { animation-delay: 2.2s; }
-.animate .flower-petal__5 { animation-delay: 2.3s; }
-.animate .flower-petal__1 { animation-delay: 2.4s; }
+.animate .flower-petal { 
+    /* petal-grow chạy ở giây 1.5, flower-rotate cũng bắt đầu xoay ở giây 1.5 */
+    animation: petal-soft-bloom 1s ease-out forwards 1.5s, 
+               flower-rotate 4s linear infinite 2.5s; 
+}
 
 /* Lá mọc lên nhanh hơn */
 .animate .flower-grass { animation: grass-grow 0.5s ease-in forwards 0.8s, flower-rotate 6s linear infinite; }
-.animate .flower-leaf { animation: grass-grow 0.4s ease-in forwards, flower-rotate 6s linear infinite; }
-.animate .flower-leaf__2 { animation-delay: 1.0s; }
-.animate .flower-leaf__1 { animation-delay: 0.9s; }
-.animate .flower-leaf__4 { animation-delay: 0.8s; }
-.animate .flower-leaf__3 { animation-delay: 0.7s; }
-.animate .flower-leaf__6 { animation-delay: 0.6s; }
-.animate .flower-leaf__5 { animation-delay: 0.5s; }
+.animate .flower-leaf { 
+    animation: grass-grow 0.4s ease-out forwards 1s, 
+               flower-rotate 6s linear infinite 1s; 
+}
 
 /* Đốm sáng xuất hiện sớm và bay nhanh hơn */
 .animate .flower-light { animation: light-float 4s ease-in-out infinite; }
@@ -317,7 +311,11 @@ body::before {
 @keyframes flower-rotate { 0%,100% { rotate: 0deg; } 25% { rotate: 5deg; } 75% { rotate: -5deg; } }
 @keyframes shrink { 100% { transform: scale(1); } }
 @keyframes light-float { 0% { opacity: 0; transform: translate(0, 0); } 25% { opacity: 1; transform: translate(20cqi, -25cqi); } 50% { opacity: 1; transform: translate(0, -50cqi); } 75% { opacity: 1; transform: translate(-20cqi, -75cqi); } 100% { opacity: 0; transform: translate(0, -100cqi); } }
-
+@keyframes petal-soft-bloom { 
+    0% { scale: 0; opacity: 0; } 
+    70% { scale: 1.05; opacity: 0.8; } 
+    100% { scale: 1; opacity: 0.8; } 
+}
 /* --- GIAO DIỆN POPUP LỜI CHÚC --- */
 #wish-popup {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
