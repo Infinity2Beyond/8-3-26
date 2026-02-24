@@ -14,7 +14,7 @@ const wishes = [
 ];
 
 const ground = document.getElementById('ground');
-const numFlowers = 30; 
+const numFlowers = 5; 
 const isMobile = window.innerWidth < 768;
 const sizeMultiplier = isMobile ? 1.8 : 1; 
 
