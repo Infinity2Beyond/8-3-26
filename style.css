@@ -194,7 +194,6 @@ body::before {
     background-image: linear-gradient(135deg, hsl(var(--hue), 100%, 50%) 20%, hsl(var(--hue), 100%, 80%) 80%);
     position: absolute;
     opacity: 0;
-    will-change: transform;
 }
 
 .flower-petal__1 { bottom: 42%; right: 65%; border-radius: 0px 100% 5% 100%/0px 100% 5% 100%; transform: rotate(-10deg) scale(0.82); }
@@ -209,7 +208,6 @@ body::before {
 /* --- ĐỐM SÁNG --- */
 .flower-light {
     width: 3cqi; aspect-ratio: 1; position: absolute; border-radius: 50%; opacity: 0;
-    will-change: transform, opacity;
 }
 .flower-light:nth-child(odd), .flower-light:nth-child(even) {
     background-color: hsl(var(--hue), 100%, 75%);
@@ -341,7 +339,6 @@ body::before {
     border-radius: 50%;
     z-index: 0; /* Nằm ngay dưới đồi cỏ và hoa */
     animation: twinkle infinite alternate ease-in-out;
-    will-change: transform, opacity, box-shadow;
 }
 
 @keyframes twinkle {
