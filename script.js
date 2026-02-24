@@ -1,4 +1,4 @@
-let userName = "Cậu"; // Giá trị mặc định
+let userName = "cậu"; // Giá trị mặc định
 
 // =========================================
 // 1. KHAI BÁO CẤU HÌNH & DANH SÁCH LỜI CHÚC
@@ -14,13 +14,14 @@ const wishes = [
 ];
 
 const ground = document.getElementById('ground');
-const numFlowers = 70; // Đã tăng lên 50 bông hoa
+const numFlowers = 70; // 70 bông hoa
 const isMobile = window.innerWidth < 768;
 const sizeMultiplier = isMobile ? 1.8 : 1; 
 
-// --- CẤU TRÚC 1: BÔNG HOA CHÍNH (Giữ nguyên độ chi tiết) ---
+// --- CẤU TRÚC: BÔNG HOA CHÍNH ĐẦY ĐỦ CHI TIẾT ---
 const flowerHTML = `
-    <div class="flower-glow"></div> <div class="flower-top">
+    <div class="flower-glow"></div> 
+    <div class="flower-top">
         <div class="flower-petal flower-petal__1"></div>
         <div class="flower-petal flower-petal__2"></div>
         <div class="flower-petal flower-petal__3"></div>
@@ -71,7 +72,6 @@ gridPositions.sort(() => Math.random() - 0.5);
 // =========================================
 // 3. TRỒNG HOA VÀ GẮN TƯƠNG TÁC
 // =========================================
-// Đảm bảo không gọi quá số điểm trên lưới
 const actualNumFlowers = Math.min(numFlowers, gridPositions.length);
 
 for (let i = 0; i < actualNumFlowers; i++) {
@@ -85,7 +85,7 @@ for (let i = 0; i < actualNumFlowers; i++) {
         leftPos = 50; 
         size = 4.5 * sizeMultiplier;
         flower.classList.add('flower-main'); 
-        flower.innerHTML = flowerHTML; // Hoa chính ở giữa dùng cấu trúc đầy đủ
+        flower.innerHTML = flowerHTML; 
     } else {
         topPos = gridPositions[i].y;
         leftPos = gridPositions[i].x;
@@ -104,10 +104,7 @@ for (let i = 0; i < actualNumFlowers; i++) {
         const popup = document.getElementById('wish-popup');
         const wishText = document.getElementById('wish-text');
         
-        // Lấy lời chúc ngẫu nhiên
         let rawWish = wishes[Math.floor(Math.random() * wishes.length)];
-        
-        // THAY THẾ CHỮ "CẬU" BẰNG TÊN NGƯỜI DÙNG
         let personalizedWish = rawWish.replace(/cậu/gi, userName);
         
         wishText.innerText = personalizedWish;
@@ -120,35 +117,32 @@ for (let i = 0; i < actualNumFlowers; i++) {
 }
 
 // =========================================
-// 4. LOGIC KHỞI ĐỘNG (BẤM NÚT -> CHẠY)
+// 4. LOGIC KHỞI ĐỘNG (BẤM NÚT HOẶC NHẤN ENTER)
 // =========================================
 const bgMusic = document.getElementById('bg-music');
 const flowers = document.querySelectorAll('.flower-container');
 const startBtn = document.getElementById('start-btn');
 const nameInput = document.getElementById('username-input');
 const wishTitle = document.getElementById('wish-title');
+const introScreen = document.getElementById('intro-screen');
 
-startBtn.addEventListener('click', () => {
+function handleStart() {
     let name = nameInput.value.trim();
     if (name) userName = name; 
     if (wishTitle) {
         wishTitle.innerText = `💌 Gửi tặng ${userName}`;
     }
-    // Đổi tiêu đề trang web cho chuyên nghiệp
     document.title = `Gửi tặng ${userName} 🌸`;
 
-    // Ẩn màn hình Intro và chạy nhạc/hoa
-    document.getElementById('intro-screen').style.opacity = '0';
+    introScreen.style.opacity = '0';
     setTimeout(() => {
-        document.getElementById('intro-screen').style.display = 'none';
+        introScreen.style.display = 'none';
     }, 500);    
     bgMusic.play();
     ground.classList.add('start-zoom');
     
-    // Bông hoa chính nở trước
     document.querySelector('.flower-main').classList.add('animate');
 
-    // Sau 1.5s các bông còn lại mọc rào rào (Giảm delay index để mọc nhanh hơn với 50 bông)
     setTimeout(() => {
         flowers.forEach((f, idx) => {
             if(!f.classList.contains('flower-main')) {
@@ -156,6 +150,15 @@ startBtn.addEventListener('click', () => {
             }
         });
     }, 1500);
+    setTimeout(typeSkyPoem, 1000);
+}
+
+// Bắt sự kiện click chuột
+startBtn.addEventListener('click', handleStart);
+
+// Bắt sự kiện nhấn phím Enter
+nameInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') handleStart();
 });
 
 // =========================================
@@ -175,7 +178,6 @@ function createStars() {
 }
 createStars();
 
-// Outro
 const shootingStar = document.createElement('div');
 shootingStar.className = 'shooting-star';
 document.body.appendChild(shootingStar);
@@ -193,5 +195,46 @@ bgMusic.addEventListener('timeupdate', () => {
     }
 });
 
-// Đóng popup
 document.getElementById('close-wish').onclick = () => document.getElementById('wish-popup').classList.add('hidden');
+
+// Hàm gõ chữ bài thơ trên trời (Dựa trên logic thiệp Tết)
+function typeSkyPoem() {
+    console.log("Bắt đầu gõ thơ..."); // Kiểm tra log
+    const element = document.getElementById('sky-poem');
+    const moon = document.getElementById('moon');
+    
+    if (!element) {
+        console.error("Không tìm thấy thẻ #sky-poem!");
+        return;
+    }
+    
+    const text = element.getAttribute('data-text');
+    element.innerHTML = ""; 
+    let i = 0;
+    const speed = 100;
+
+    function typing() {
+        if (i < text.length) {
+            let char = text.charAt(i);
+            if (char === '|') {
+                element.innerHTML += "<br>";
+            } else {
+                element.innerHTML += char;
+            }
+            i++;
+            setTimeout(typing, speed);
+        } else {
+            console.log("Gõ thơ xong, chờ 10s biến thành trăng...");
+            // SAU 10 GIÂY BIẾN THÀNH TRĂNG
+            setTimeout(() => {
+                element.classList.add('poem-fade-out');
+                if (moon) {
+                    setTimeout(() => {
+                        moon.classList.add('moon-activate');
+                    }, 1000);
+                }
+            }, 10000);
+        }
+    }
+    typing();
+}

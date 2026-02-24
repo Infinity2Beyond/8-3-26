@@ -2,14 +2,26 @@
     box-sizing: border-box;
 }
 
+/* --- MÀN HÌNH INTRO NÂNG CẤP --- */
 .intro-container {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
-    background: #020111; /* Nền tối để tiệp với bầu trời */
+    /* Dùng hình ảnh cánh đồng hoa vuông làm nền */
+    background: url('./image_7e4f74.jpg') center/cover no-repeat;
     z-index: 999999;
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: opacity 0.5s ease;
+}
+
+/* Thêm lớp phủ đen mờ để khung nhập tên nổi bật hơn trên nền ảnh */
+.intro-container::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(2, 1, 17, 0.65);
+    z-index: 0;
 }
 
 .intro-content {
@@ -17,17 +29,30 @@
     padding: 40px;
     border-radius: 20px;
     text-align: center;
-    box-shadow: 0 0 30px rgba(255, 51, 102, 0.5);
+    /* Viền phát sáng mạnh mô phỏng dự án Tết */
+    box-shadow: 0 0 30px rgba(255, 51, 102, 0.8);
     border: 4px solid #ff3366;
     max-width: 90%;
     width: 400px;
+    position: relative; /* Để khung này nổi lên trên lớp phủ đen */
+    z-index: 1;
+    animation: zoomIn 0.5s ease; /* Hiệu ứng bung mở */
 }
 
 .intro-title {
-    font-family: 'Pacifico', cursive;
+    font-family: 'Great Vibes', cursive; /* Font nghệ thuật uốn lượn */
     color: #ff3366;
-    font-size: 32px;
+    font-size: 45px;
+    margin-top: 0;
+    margin-bottom: 15px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+}
+
+.intro-content p {
+    font-family: 'Pacifico', cursive; /* Font chữ mềm mại */
+    font-size: 18px;
     margin-bottom: 20px;
+    color: #333;
 }
 
 #username-input {
@@ -39,6 +64,7 @@
     text-align: center;
     margin-bottom: 20px;
     width: 100%;
+    font-family: inherit;
 }
 
 #start-btn {
@@ -57,6 +83,12 @@
     transform: scale(1.1);
 }
 
+/* Keyframes hiệu ứng phóng to lấy từ dự án Tết */
+@keyframes zoomIn {
+    from { transform: scale(0.5); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
 @keyframes pulse {
     0% { transform: scale(1); }
     50% { transform: scale(1.1); }
@@ -64,7 +96,6 @@
 }
 
 body {
-    /* Bầu trời đêm */
     background: linear-gradient(to bottom, #020111 0%, #20124d 50%, #0c2012 100%);
     margin: 0;
     padding: 0;
@@ -77,22 +108,19 @@ body {
     position: relative;
 }
 
-/* Vẽ ngọn đồi cỏ bằng CSS */
 body::before {
     content: '';
     position: absolute;
     bottom: 0;
     left: -10%;
     width: 120%;
-    height: 45%; /* Độ cao của bãi cỏ */
+    height: 45%; 
     background: linear-gradient(to bottom, #103319 0%, #030a05 100%);
-    border-radius: 50% 50% 0 0 / 30% 30% 0 0; /* Tạo độ cong nhẹ cho ngọn đồi */
+    border-radius: 50% 50% 0 0 / 30% 30% 0 0; 
     z-index: 0;
-    box-shadow: inset 0 20px 50px rgba(0,0,0,0.5); /* Đổ bóng cho có chiều sâu */
+    box-shadow: inset 0 20px 50px rgba(0,0,0,0.5); 
 }
 
-/* Chỉnh lại ground để hoa mọc đúng trên đồi */
-/* --- PHỤC HỒI HIỆU ỨNG ZOOM TOÀN CẢNH --- */
 .ground {
     width: 100vw;
     height: 100vh;
@@ -100,20 +128,14 @@ body::before {
     top: 0;
     left: 0;
     z-index: 1;
-    
-    /* Focus camera vào tọa độ X: 50%, Y: 70% (chỗ bông hoa đầu tiên) */
     transform-origin: 50% 70%; 
-    transform: scale(2.5); /* Phóng to 2.5 lần lúc mới mở */
-    /* Đợi 2.5 giây cho hoa nở xong rồi mới bắt đầu zoom out ra (kéo dài 2s) */
-    /* animation: shrink 2s ease-in-out forwards 2.5s;  */
+    transform: scale(2.5); 
 }
 
 .ground.start-zoom {
-    /* Mở rộng góc máy trong 1.5s (thay vì 2s), bắt đầu sau khi đợi 1.5s (thay vì 2.5s) */
     animation: shrink 1.5s ease-in-out forwards 1.5s; 
 }
 
-/* Đưa đồi cỏ vào trong ground để nó zoom mượt mà cùng với hoa */
 .ground::before {
     content: '';
     position: absolute;
@@ -129,7 +151,7 @@ body::before {
 
 .flower-container {
     position: absolute;
-    aspect-ratio: 12; /* [SỬA] Nâng từ 8 lên 12 để cành hoa dài ra một chút, bớt tù túng */
+    aspect-ratio: 12; 
     container-type: inline-size;
     justify-items: center;
     align-items: center;
@@ -138,32 +160,27 @@ body::before {
     transition: transform 0.2s, filter 0.2s;
 }
 
-.flower-container:hover {
-    transform: scale(1.15) !important; 
-    z-index: 9999 !important;
-}
-
-.flower-container:active {
+.flower-container:hover, .flower-container:active {
     transform: scale(1.15) !important; 
     z-index: 9999 !important;
 }
 
 .flower-top {
-    width: 100cqi; /* [SỬA] Giảm từ 160 xuống 100 (Vừa đủ to gấp đôi bản gốc) */
+    width: 100cqi; 
     aspect-ratio: 1.5;
     position: relative;
     z-index: 1;
     position: absolute;
-    bottom: 95%; /* Kéo nhích đầu hoa lên cao một xíu để lộ phần cành */
+    bottom: 95%; 
     left: 50%;
     transform: translate(-50%, 50%);
 }
 
 .flower-bottom {
     width: 6%; 
-    aspect-ratio: 0.025; /* [SỬA] Ép thân thon thả lại một chút */
+    aspect-ratio: 0.025; 
     left: 47%; 
-    top: 45%; /* Căn lại vị trí nối giữa thân và hoa cho mượt */
+    top: 45%; 
     position: absolute;
 }
 
@@ -171,7 +188,7 @@ body::before {
     width: 30cqi;
     aspect-ratio: 1.5;
     border-radius: 50%;
-    background-color: hsl(var(--hue), 100%, 80%);
+    background-color: #ffdb11;
     box-shadow: inset 0px -3cqi 3cqi hsla(var(--hue), 100%, 30%, 0.4);
     position: absolute;
     scale: 0;
@@ -182,7 +199,6 @@ body::before {
     transform-origin: top left;
 }
 
-/* --- CÁNH HOA: Sử dụng biến --hue ngẫu nhiên --- */
 .flower-petal {
     width: 80%;
     aspect-ratio: 1;
@@ -201,7 +217,6 @@ body::before {
 .flower-petal__7 { top: 50%; left: 65%; border-radius: 0px 100% 10% 100%/0px 100% 5% 100%; transform: rotate(180deg) scale(1.1); }
 .flower-petal__8 { top: 50%; left: 10%; border-radius: 0px 100% 50% 100%/0px 100% 30% 100%; transform: rotate(225deg) scale(1); }
 
-/* --- ĐỐM SÁNG --- */
 .flower-light {
     width: 3cqi; aspect-ratio: 1; position: absolute; border-radius: 50%; opacity: 0;
 }
@@ -227,12 +242,12 @@ body::before {
     transform: translate(-50%, 50%);
     z-index: 0;
     opacity: 0;
-    pointer-events: none; /* Không cản trở cú click chuột */
+    pointer-events: none;
     border-radius: 50%;
 }
 
 .animate .flower-glow {
-    animation: glow-fade 2s forwards 1.5s; /* Sáng lên cùng lúc với lúc hoa nở */
+    animation: glow-fade 2s forwards 1.5s; 
 }
 
 @keyframes glow-fade {
@@ -240,7 +255,6 @@ body::before {
     100% { opacity: 1; transform: translate(-50%, 50%) scale(1); }
 }
 
-/* --- THÂN HOA: Đồng màu với cánh hoa --- */
 .flower-stem {
     width: 100%; height: 100%; transform: scaleY(0);
     background-image: linear-gradient(to left, rgba(0, 0, 0, 0.4), transparent, rgba(0, 0, 0, 0.4)),
@@ -248,7 +262,6 @@ body::before {
     border-radius: 50px 50px 0 0; transform-origin: bottom center;
 }
 
-/* --- LÁ HOA: Cố định màu xanh lá --- */
 .flower-leaf {
     width: 40%; aspect-ratio: 2.5; position: absolute; scale: 0; opacity: 0;
 }
@@ -261,7 +274,6 @@ body::before {
     border-radius: 100% 0% 100% 0%/100% 0% 100% 0%; transform-origin: bottom left;
 }
 
-/* --- CỎ DƯỚI GỐC: Cố định màu xanh lá --- */
 .flower-grass {
     position: absolute; bottom: -20cqi; width: 80cqi; height: 120cqi; opacity: 0; scale: 0;
     mask-image: linear-gradient(to top, transparent 15%, #fff 50%);
@@ -276,36 +288,23 @@ body::before {
 .flower-grass__3 { left: 70% !important; width: 75cqi; height: 100cqi; }
 .flower-grass__4 { right: 70% !important; width: 75cqi; height: 90cqi; }
 
-/* ANIMATION */
 .animate.flower-container { animation: flower-rotate 12s linear infinite; }
-
-/* Rút ngắn thời gian mọc thân từ 3s xuống 1.5s */
 .animate .flower-stem { animation: stem-grow 1.5s ease-in forwards; }
-
-.animate .flower-circle { 
-    animation: circle-soft-bloom 1s ease-out forwards 1.5s;
-}
-
+.animate .flower-circle { animation: circle-soft-bloom 1s ease-out forwards 1.5s; }
 .animate .flower-petal { 
-    /* petal-grow chạy ở giây 1.5, flower-rotate cũng bắt đầu xoay ở giây 1.5 */
     animation: petal-soft-bloom 1s ease-out forwards 1.5s, 
                flower-rotate 4s linear infinite 2.5s; 
 }
-
-/* Lá mọc lên nhanh hơn */
 .animate .flower-grass { animation: grass-grow 0.5s ease-in forwards 0.8s, flower-rotate 6s linear infinite; }
 .animate .flower-leaf { 
     animation: grass-grow 0.4s ease-out forwards 1s, 
                flower-rotate 6s linear infinite 1s; 
 }
-
-/* Đốm sáng xuất hiện sớm và bay nhanh hơn */
 .animate .flower-light { animation: light-float 4s ease-in-out infinite; }
 .animate .flower-light__1 { animation-delay: 2.0s; }
 .animate .flower-light__2 { animation-delay: 2.3s; }
 .animate .flower-light__3 { animation-delay: 2.6s; }
 
-@keyframes petal-grow { 0% { scale: 0; opacity: 0.8; } 50% { scale: 1; opacity: 0.8; } 75% { scale: 1.1; opacity: 0.8; } 90% { scale: 0.9; opacity: 0.8; } 100% { scale: 1; opacity: 0.8; } }
 @keyframes grass-grow { 100% { opacity: 1; scale: 1; } }
 @keyframes stem-grow { 0% { border-radius: 10%; } 100% { transform: scaleY(1); } }
 @keyframes flower-rotate { 0%,100% { rotate: 0deg; } 25% { rotate: 5deg; } 75% { rotate: -5deg; } }
@@ -316,7 +315,12 @@ body::before {
     70% { scale: 1.05; opacity: 0.8; } 
     100% { scale: 1; opacity: 0.8; } 
 }
-/* --- GIAO DIỆN POPUP LỜI CHÚC --- */
+@keyframes circle-soft-bloom { 
+    0% { scale: 0; opacity: 0; } 
+    70% { scale: 1.05; opacity: 1; } 
+    100% { scale: 1; opacity: 1; } 
+}
+
 #wish-popup {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0, 0, 0, 0.7); z-index: 99999;
@@ -353,48 +357,39 @@ body::before {
     position: absolute;
     background-color: #ffffff;
     border-radius: 50%;
-    z-index: 0; /* Nằm ngay dưới đồi cỏ và hoa */
+    z-index: 0; 
     animation: twinkle infinite alternate ease-in-out;
 }
 
 @keyframes twinkle {
-    0% {
-        opacity: 0.1;
-        transform: scale(0.8);
-    }
-    100% {
-        opacity: 1;
-        transform: scale(1.2);
-    }
+    0% { opacity: 0.1; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1.2); }
 }
 
-/* --- TRÁI TIM TRÊN TRỜI (Ở giữa bầu trời sao) --- */
 .sky-heart {
     position: absolute;
     top: 28%; 
     left: 50%;
-    transform: translate(calc(-50% + 30px), -50%); 
+    transform: translate(-50%, -50%); 
     width: 250px;
     height: 250px;
     z-index: 100;
     pointer-events: none;
-    background: none !important; /* Đảm bảo không có nền */
+    background: none !important; 
 }
 
-/* Ép hiệu ứng phát sáng lên toàn bộ khối SVG thay vì từng nét vẽ */
 .sky-heart svg {
-    overflow: visible; /* Ngăn trình duyệt cắt lẹm viền sáng */
+    overflow: visible; 
     background: none !important;
 }
 
 .heart-path {
-    fill: none !important; /* Dùng 'none' chuẩn của SVG thay vì 'transparent' */
+    fill: none !important; 
     stroke: #ff69b4; 
     stroke-width: 4; 
     stroke-linecap: round;
     stroke-dasharray: 300; 
     stroke-dashoffset: 300;
-    /* Đã xóa dòng filter ở đây để tránh lỗi khung vuông */
 }
 
 .animate-heart .heart-path {
@@ -402,13 +397,9 @@ body::before {
 }
 
 @keyframes drawHeart {
-    100% { 
-        stroke-dashoffset: 0; 
-        fill: none !important; 
-    }
+    100% { stroke-dashoffset: 0; fill: none !important; }
 }
 
-/* --- SAO CHỔI (Bay xuyên tâm trái tim trên cao) --- */
 .shooting-star {
     position: absolute;
     width: 200px;
@@ -437,39 +428,83 @@ body::before {
     animation: shoot 5s ease-in forwards 3.5s;
 }
 
-/* [SỬA] Canh lại điểm rơi: Đi qua đúng tọa độ (left: 50%, top: 28%) của trái tim */
 @keyframes shoot {
     0% { top: -10%; left: -10%; opacity: 1; }
     100% { top: 66%; left: 110%; opacity: 0; }
 }
+#sky-poem-container {
+    position: fixed;
+    top: 15%;
+    width: 100%;
+    height: 300px; /* Cố định chiều cao để không bị nhảy vị trí khi thơ biến mất */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    pointer-events: none;
+}
+
+#sky-poem {
+    font-family: 'Great Vibes', cursive;
+    font-size: 32px;
+    color: #fff;
+    line-height: 1.8;
+    text-shadow: 0 0 10px #fff, 0 0 20px rgba(255, 51, 102, 0.4);
+    z-index: 11;
+    transition: all 2s ease-in-out;
+}
+
+#moon {
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, #fff 0%, #fffde1 60%, #fffaad 100%);
+    border-radius: 50%;
+    position: absolute;
+    /* Căn giữa chính xác */
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0); 
+    opacity: 0;
+    z-index: 5; /* Nằm sau bài thơ */
+    box-shadow: 0 0 60px 20px rgba(255, 255, 255, 0.4), 
+                0 0 100px 40px rgba(255, 250, 173, 0.2);
+    transition: all 4s cubic-bezier(0.4, 0, 0.2, 1); /* Chạy mượt hơn */
+}
+
+/* Khi thơ biến mất */
+.poem-fade-out {
+    opacity: 0 !important;
+    transform: scale(0.5); /* Thu nhỏ hẳn lại */
+    filter: blur(10px); /* Thêm hiệu ứng nhòe đi cho ảo */
+}
+
+/* Khi trăng hiện ra */
+.moon-activate {
+    opacity: 1 !important;
+    transform: translate(-50%, -50%) scale(1.2) !important;
+}
 
 @media (max-width: 768px) {
-    /* Mở rộng đồi cỏ lên cao hơn để có chỗ trồng 50 bông hoa */
     .ground::before {
         height: 55%; 
-        width: 250%; /* Đồi thoải hơn nữa */
+        width: 250%; 
         left: -75%;
         border-radius: 50% 50% 0 0 / 10% 10% 0 0;
     }
+    #sky-poem {
+        font-size: 22px; /* Chỉnh size nhỏ lại cho điện thoại */
+        padding: 0 20px;
+    }
+    #moon { width: 70px; height: 70px; }
     .sky-heart {
-        width: 200px; /* Thu nhỏ trái tim một chút trên điện thoại cho thanh thoát */
+        width: 200px; 
         transform: translate(-50%, -50%); 
         top: 25%;
     }
-
     @keyframes shoot {
-        0% { 
-            top: -5%; 
-            left: -20%; 
-            opacity: 1; 
-        }
-        100% { 
-            top: 60%; 
-            left: 100%; 
-            opacity: 0; 
-        }
+        0% { top: -5%; left: -20%; opacity: 1; }
+        100% { top: 60%; left: 100%; opacity: 0; }
     }
-    /* Thu nhỏ popup lời chúc một chút để vừa vặn màn hình điện thoại */
     .wish-content {
         width: 85%;
         padding: 30px 20px;
