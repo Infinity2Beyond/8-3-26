@@ -131,7 +131,6 @@ body::before {
     position: absolute;
     aspect-ratio: 12; /* [SỬA] Nâng từ 8 lên 12 để cành hoa dài ra một chút, bớt tù túng */
     container-type: inline-size;
-    filter: drop-shadow(0 0 25cqi hsla(var(--hue), 100%, 60%, 0.8));
     justify-items: center;
     align-items: center;
     transform-origin: bottom center;
@@ -141,13 +140,11 @@ body::before {
 
 .flower-container:hover {
     transform: scale(1.15) !important; 
-    filter: drop-shadow(0 0 40cqi hsla(var(--hue), 100%, 70%, 1));
     z-index: 9999 !important;
 }
 
 .flower-container:active {
     transform: scale(1.15) !important; 
-    filter: drop-shadow(0 0 40cqi hsla(var(--hue), 100%, 70%, 1));
     z-index: 9999 !important;
 }
 
@@ -182,7 +179,6 @@ body::before {
     top: 50%;
     transform: translate(-50%, -50%);
     border-radius: 100% 100% 100% 100%/90% 90% 90% 90%;
-    filter: drop-shadow(0 0 15cqi hsl(var(--hue), 100%, 60%));
     transform-origin: top left;
 }
 
@@ -211,7 +207,6 @@ body::before {
 }
 .flower-light:nth-child(odd), .flower-light:nth-child(even) {
     background-color: hsl(var(--hue), 100%, 75%);
-    filter: blur(2cqi) drop-shadow(0 0 5cqi hsl(var(--hue), 100%, 60%));
 }
 .flower-light__1 { top: 10%; left: 20%; scale: 0.8; }
 .flower-light__2 { top: 20%; left: 80%; scale: 1.2; }
@@ -221,6 +216,29 @@ body::before {
 .flower-light__6 { top: 60%; left: 30%; }
 .flower-light__7 { top: 70%; left: 40%; scale: 0.5; }
 .flower-light__8 { top: 60%; left: 60%; }
+
+.flower-glow {
+    position: absolute;
+    width: 200cqi; 
+    height: 200cqi;
+    background: radial-gradient(circle, hsla(var(--hue), 100%, 75%, 0.5) 0%, transparent 60%);
+    bottom: 45%; 
+    left: 50%;
+    transform: translate(-50%, 50%);
+    z-index: 0;
+    opacity: 0;
+    pointer-events: none; /* Không cản trở cú click chuột */
+    border-radius: 50%;
+}
+
+.animate .flower-glow {
+    animation: glow-fade 2s forwards 1.5s; /* Sáng lên cùng lúc với lúc hoa nở */
+}
+
+@keyframes glow-fade {
+    0% { opacity: 0; transform: translate(-50%, 50%) scale(0.5); }
+    100% { opacity: 1; transform: translate(-50%, 50%) scale(1); }
+}
 
 /* --- THÂN HOA: Đồng màu với cánh hoa --- */
 .flower-stem {
@@ -345,12 +363,10 @@ body::before {
     0% {
         opacity: 0.1;
         transform: scale(0.8);
-        box-shadow: 0 0 2px rgba(255, 255, 255, 0.1);
     }
     100% {
         opacity: 1;
         transform: scale(1.2);
-        box-shadow: 0 0 8px rgba(255, 255, 255, 0.9); /* Phát sáng nhẹ */
     }
 }
 
@@ -370,7 +386,6 @@ body::before {
 /* Ép hiệu ứng phát sáng lên toàn bộ khối SVG thay vì từng nét vẽ */
 .sky-heart svg {
     overflow: visible; /* Ngăn trình duyệt cắt lẹm viền sáng */
-    filter: drop-shadow(0 0 15px #ff1493) drop-shadow(0 0 30px #ff69b4); 
     background: none !important;
 }
 

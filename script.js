@@ -14,13 +14,13 @@ const wishes = [
 ];
 
 const ground = document.getElementById('ground');
-const numFlowers = 5; 
+const numFlowers = 50; // Đã tăng lên 50 bông hoa
 const isMobile = window.innerWidth < 768;
 const sizeMultiplier = isMobile ? 1.8 : 1; 
 
-// Cấu trúc HTML của một bông hoa (Đã tỉa bớt đốm sáng để giảm lag)
+// --- CẤU TRÚC 1: BÔNG HOA CHÍNH (Giữ nguyên độ chi tiết) ---
 const flowerHTML = `
-    <div class="flower-top">
+    <div class="flower-glow"></div> <div class="flower-top">
         <div class="flower-petal flower-petal__1"></div>
         <div class="flower-petal flower-petal__2"></div>
         <div class="flower-petal flower-petal__3"></div>
@@ -71,7 +71,10 @@ gridPositions.sort(() => Math.random() - 0.5);
 // =========================================
 // 3. TRỒNG HOA VÀ GẮN TƯƠNG TÁC
 // =========================================
-for (let i = 0; i < numFlowers; i++) {
+// Đảm bảo không gọi quá số điểm trên lưới
+const actualNumFlowers = Math.min(numFlowers, gridPositions.length);
+
+for (let i = 0; i < actualNumFlowers; i++) {
     const flower = document.createElement('div');
     flower.className = 'flower-container';
     const randomHue = Math.floor(Math.random() * 120) + 180;    
@@ -82,10 +85,12 @@ for (let i = 0; i < numFlowers; i++) {
         leftPos = 50; 
         size = 4.5 * sizeMultiplier;
         flower.classList.add('flower-main'); 
+        flower.innerHTML = flowerHTML; // Hoa chính ở giữa dùng cấu trúc đầy đủ
     } else {
         topPos = gridPositions[i].y;
         leftPos = gridPositions[i].x;
         size = (1.5 + ((topPos - startTop) / heightRange) * 5) * sizeMultiplier; 
+        flower.innerHTML = flowerHTML;
     }
     
     zIndex = Math.floor(topPos);
@@ -94,20 +99,19 @@ for (let i = 0; i < numFlowers; i++) {
     flower.style.left = `${leftPos}%`;
     flower.style.width = `${size}%`;
     flower.style.zIndex = zIndex;
-    flower.innerHTML = flowerHTML;
 
     const showWish = (e) => {
-    const popup = document.getElementById('wish-popup');
-    const wishText = document.getElementById('wish-text');
-    
-    // Lấy lời chúc ngẫu nhiên
-    let rawWish = wishes[Math.floor(Math.random() * wishes.length)];
-    
-    // THAY THẾ CHỮ "CẬU" BẰNG TÊN NGƯỜI DÙNG
-    let personalizedWish = rawWish.replace(/cậu/gi, userName);
-    
-    wishText.innerText = personalizedWish;
-    popup.classList.remove('hidden');
+        const popup = document.getElementById('wish-popup');
+        const wishText = document.getElementById('wish-text');
+        
+        // Lấy lời chúc ngẫu nhiên
+        let rawWish = wishes[Math.floor(Math.random() * wishes.length)];
+        
+        // THAY THẾ CHỮ "CẬU" BẰNG TÊN NGƯỜI DÙNG
+        let personalizedWish = rawWish.replace(/cậu/gi, userName);
+        
+        wishText.innerText = personalizedWish;
+        popup.classList.remove('hidden');
     };
 
     flower.addEventListener('click', showWish);
@@ -123,7 +127,6 @@ const flowers = document.querySelectorAll('.flower-container');
 const startBtn = document.getElementById('start-btn');
 const nameInput = document.getElementById('username-input');
 const wishTitle = document.getElementById('wish-title');
-
 
 startBtn.addEventListener('click', () => {
     let name = nameInput.value.trim();
@@ -145,11 +148,11 @@ startBtn.addEventListener('click', () => {
     // Bông hoa chính nở trước
     document.querySelector('.flower-main').classList.add('animate');
 
-    // Sau 1.5s các bông còn lại mọc rào rào
+    // Sau 1.5s các bông còn lại mọc rào rào (Giảm delay index để mọc nhanh hơn với 50 bông)
     setTimeout(() => {
         flowers.forEach((f, idx) => {
             if(!f.classList.contains('flower-main')) {
-                setTimeout(() => f.classList.add('animate'), idx * 50);
+                setTimeout(() => f.classList.add('animate'), idx * 25);
             }
         });
     }, 1500);
