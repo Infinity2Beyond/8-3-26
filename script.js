@@ -16,7 +16,6 @@ const wishes = [
     "Chúc cậu mãi luôn tự tin, yêu đời và thành công trong mọi dự định!",
     "Gửi đến cậu ngàn đóa hoa tươi thắm nhất. Ngày 8/3 thật hạnh phúc nha!",
     "Chúc bông hoa xinh đẹp nhất luôn tỏa sáng theo cách của riêng mình!",
-    "Chúc cậu 8/3 vui vẻ, ăn nhiều không béo, tiền tiêu rủng rỉnh!",
     "Nụ cười của cậu rất đẹp, hãy luôn giữ nụ cười ấy trên môi nhé!"
 ];
 
@@ -156,11 +155,9 @@ function handleStart() {
     document.title = `Gửi tặng ${userName} 🌸`;
 
     // Ép trình duyệt tải âm thanh ngay lập tức (Audio Preload Trick)
-    bgMusic.volume = 0;
     bgMusic.play().then(() => {
         bgMusic.pause();
         bgMusic.currentTime = 0;
-        bgMusic.volume = 1;
     }).catch(e => console.log("Audio unlock failed:", e));
 
     introScreen.style.opacity = '0';
@@ -258,8 +255,13 @@ function triggerClimax() {
 
     // 2. Chạy nhạc sau khi cánh cuối cùng bắt đầu rụng
     setTimeout(() => {
+        bgMusic.currentTime = 0;
         bgMusic.play();
-        
+        const calligraphyText = document.getElementById('calligraphy-text');
+        if (calligraphyText) {
+            calligraphyText.classList.add('animate-calligraphy');
+        }
+
         // 3. Đợi đúng 2 giây sau khi nhạc chạy -> Bừng sáng và hồi sinh
         setTimeout(() => {
             document.body.classList.add('daytime'); 
@@ -274,7 +276,6 @@ function triggerClimax() {
             });
             
         }, 2000); 
-        
     }, totalDropTime + 200); 
 }
 
@@ -308,7 +309,7 @@ bgMusic.addEventListener('timeupdate', () => {
     const timeLeft = bgMusic.duration - bgMusic.currentTime;
     if (timeLeft <= 5 && !skyHeart.classList.contains('animate-heart')) {
         skyHeart.classList.add('animate-heart');
-        shootingStar.classList.add('animate-shooting-star');
+        // shootingStar.classList.add('animate-shooting-star');
     }
 });
 

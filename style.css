@@ -333,6 +333,49 @@ body.daytime #moon {
 .animate-shooting-star { animation: shoot 5s ease-in forwards 3.5s; }
 @keyframes shoot { 0% { top: -10%; left: -10%; opacity: 1; } 100% { top: 66%; left: 110%; opacity: 0; } }
 
+/* --- CHỮ THƯ PHÁP CAO TRÀO --- */
+#calligraphy-text {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    text-align: center;
+    font-family: 'Great Vibes', cursive; /* Font chữ thư pháp lãng mạn */
+    font-size: 65px;
+    color: #ff1493; /* Màu hồng đậm */
+    text-shadow: 0 0 10px #fff, 0 0 20px #ffb6c1, 0 0 30px #ff69b4;
+    z-index: 10000;
+    pointer-events: none; /* Không cản trở click chuột */
+    
+    /* Thiết lập mặt nạ để làm hiệu ứng viết chữ */
+    -webkit-mask-image: linear-gradient(to right, black 0%, black 50%, transparent 50%, transparent 100%);
+    -webkit-mask-size: 200% 100%;
+    -webkit-mask-position: 100% 0; /* Ẩn toàn bộ ban đầu */
+    opacity: 0;
+}
+
+/* Class sẽ được JS gọi ra */
+.animate-calligraphy {
+    animation: drawCalligraphy 12s linear forwards;
+}
+
+@keyframes drawCalligraphy {
+    0% {
+        opacity: 0;
+        -webkit-mask-position: 100% 0;
+        transform: translate(-50%, -45%);
+    }
+    10% {
+        opacity: 1; /* Sáng lên từ từ */
+    }
+    100% {
+        opacity: 1;
+        -webkit-mask-position: 0% 0; /* Quét mặt nạ lộ ra toàn bộ chữ */
+        transform: translate(-50%, -50%); /* Trôi nhẹ lên */
+    }
+}
+
 /* --- RESPONSIVE MOBILE --- */
 @media (max-width: 768px) {
     .ground::before, .ground::after { 
@@ -346,4 +389,10 @@ body.daytime #moon {
     #moon { width: 70px; height: 70px; }
     .wish-content { width: 85%; padding: 30px 20px; }
     .sky-heart { width: 200px; transform: translate(-50%, -50%); top: 25%; }
+    #calligraphy-text {
+        font-size: 30px;
+        top: 35%;
+        line-height: 1.5;
+        padding: 0 15px;
+    }
 }
