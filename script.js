@@ -113,11 +113,13 @@ const showWish = (e) => {
 
 // 3.1 Trồng Bông Hoa Chính (Nằm ở trung tâm)
 const mainFlower = document.createElement('div');
+const mainSize = 5.5 * sizeMultiplier; // Tính toán chiều rộng hoa chính
 mainFlower.className = 'flower-container flower-main';
 mainFlower.style.setProperty('--hue', Math.floor(Math.random() * 120) + 180);
 mainFlower.style.top = `${centerY}%`;
-mainFlower.style.left = `${centerX}%`;
-mainFlower.style.width = `${5.5 * sizeMultiplier}%`;
+// TRỪ ĐI NỬA CHIỀU RỘNG ĐỂ TÂM HOA NẰM ĐÚNG TỌA ĐỘ
+mainFlower.style.left = `${centerX - (mainSize / 2)}%`; 
+mainFlower.style.width = `${mainSize}%`;
 mainFlower.style.zIndex = Math.floor(centerY);
 mainFlower.innerHTML = flowerHTML;
 mainFlower.addEventListener('click', showWish);
@@ -125,13 +127,15 @@ mainFlower.addEventListener('touchstart', showWish, { passive: true });
 fragment.appendChild(mainFlower);
 
 // 3.2 Trồng Các Bông Hoa Phụ (Theo tọa độ toán học)
+const subSize = 4.5 * sizeMultiplier; // Tính toán chiều rộng hoa phụ
 for (let i = 0; i < gridPositions.length; i++) {
     const flower = document.createElement('div');
     flower.className = 'flower-container';
     flower.style.setProperty('--hue', Math.floor(Math.random() * 120) + 180);
     flower.style.top = `${gridPositions[i].y}%`;
-    flower.style.left = `${gridPositions[i].x}%`;
-    flower.style.width = `${4.5 * sizeMultiplier}%`;
+    // TRỪ ĐI NỬA CHIỀU RỘNG ĐỂ TÂM HOA NẰM ĐÚNG TỌA ĐỘ
+    flower.style.left = `${gridPositions[i].x - (subSize / 2)}%`; 
+    flower.style.width = `${subSize}%`;
     flower.style.zIndex = Math.floor(gridPositions[i].y);
     flower.innerHTML = flowerHTML;
 
@@ -251,6 +255,16 @@ function triggerClimax() {
                 }
             });
             
+            const dayWish = document.createElement('div');
+            dayWish.className = 'daylight-wish';
+            // Dùng biến userName để lời chúc mang tính cá nhân hóa
+            dayWish.innerHTML = `Chúc ${userName} luôn rực rỡ<br>như những đóa hoa này nhé!`;
+            document.body.appendChild(dayWish);
+            
+            // Chờ mặt trời lên hẳn (khoảng 1.5s) rồi từ từ hiện chữ cho tăng phần kịch tính
+            setTimeout(() => {
+                dayWish.classList.add('show');
+            }, 1500);
         }, 5500); 
     }, totalDropTime + 200); 
 }
@@ -283,7 +297,7 @@ document.body.appendChild(skyHeart);
 
 bgMusic.addEventListener('timeupdate', () => {
     const timeLeft = bgMusic.duration - bgMusic.currentTime;
-    if (timeLeft <= 5 && !skyHeart.classList.contains('animate-heart')) {
+    if (timeLeft <= 15 && !skyHeart.classList.contains('animate-heart')) {
         skyHeart.classList.add('animate-heart');
     }
 });

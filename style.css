@@ -25,7 +25,7 @@ body {
 
 body.camera-zoom-in {
     /* Phóng to 1.8 lần và kéo nhẹ xuống để tập trung vào bông hoa chính */
-    transform: scale(1.8) translateY(0.5%); 
+    transform: scale(1.8) translateY(-5%); 
     /* Thời gian zoom vào chậm rãi, kịch tính (khoảng 4s) */
     transition: transform 4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -321,7 +321,7 @@ body.daytime #moon {
 .star { position: absolute; background-color: #ffffff; border-radius: 50%; z-index: 0; animation: twinkle infinite alternate ease-in-out; transition: opacity 2s; }
 @keyframes twinkle { 0% { opacity: 0.1; transform: scale(0.8); } 100% { opacity: 1; transform: scale(1.2); } }
 
-.sky-heart { position: absolute; top: 28%; left: 50%; transform: translate(calc(-50% + 30px), -50%); width: 250px; height: 250px; z-index: 100; pointer-events: none; background: none !important; }
+.sky-heart { position: absolute; top: 48%; left: 50%; transform: translate(calc(-50% + 30px), -50%); width: 250px; height: 250px; z-index: 100; pointer-events: none; background: none !important; }
 .sky-heart svg { overflow: visible; background: none !important; }
 .heart-path { fill: none !important; stroke: #ff69b4; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 300; stroke-dashoffset: 300; }
 .animate-heart .heart-path { animation: drawHeart 4s ease-in-out forwards; }
@@ -377,6 +377,31 @@ body.daytime .cloud {
     100% { transform: scale(var(--scale)) translateX(50px); }
 }
 
+/* --- LỜI CHÚC BAN NGÀY (TRÊN BẦU TRỜI) --- */
+.daylight-wish {
+    position: fixed;
+    top: 20%; /* Lơ lửng ở phần trên màn hình */
+    left: 50%;
+    transform: translateX(-50%) translateY(30px); /* Kéo thấp xuống một chút để làm hiệu ứng trôi lên */
+    font-family: 'Dancing Script', cursive; /* Dùng font chữ nghệ thuật */
+    font-size: 40px;
+    color: #ff3366; /* Màu hồng rực rỡ */
+    text-align: center;
+    line-height: 1.5;
+    opacity: 0; /* Ban đầu tàng hình */
+    z-index: 9990; /* Nằm dưới popup nhưng trên mây */
+    pointer-events: none; /* Không cản trở việc click vào hoa */
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.9), 0 0 20px rgba(255, 255, 255, 0.5); /* Viền sáng trắng giúp chữ nổi bật trên nền mây */
+    width: 90%;
+    transition: opacity 10s ease-in-out, transform 10s ease-out; /* Hiệu ứng từ từ hiện ra và trôi lên */
+}
+
+/* Class này được JS thêm vào để kích hoạt hiệu ứng */
+.daylight-wish.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0); /* Trôi về đúng vị trí */
+}
+
 /* --- RESPONSIVE MOBILE --- */
 @media (max-width: 768px) {
     .ground::before, .ground::after { 
@@ -389,5 +414,10 @@ body.daytime .cloud {
     #sky-poem { font-size: 22px; padding: 0 20px; }
     #moon { width: 70px; height: 70px; }
     .wish-content { width: 85%; padding: 30px 20px; }
-    .sky-heart { width: 200px; transform: translate(-50%, -50%); top: 25%; }
+    .sky-heart { width: 200px; transform: translate(-50%, -50%); top: 35%; }
+
+    .daylight-wish { 
+        font-size: 28px; 
+        top: 15%; 
+    }
 }
