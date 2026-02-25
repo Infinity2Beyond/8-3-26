@@ -1,5 +1,12 @@
 let userName = "Cậu";
 
+// Kiểm tra xem có truyền tên qua URL không (VD: ?name=Lan)
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.has('name')) {
+    userName = urlParams.get('name');
+    document.getElementById('username-input').value = userName;
+}
+
 // =========================================
 // 1. KHAI BÁO CẤU HÌNH & DANH SÁCH LỜI CHÚC
 // =========================================
@@ -69,9 +76,10 @@ for (let r = 0; r < rows; r++) {
 gridPositions.sort(() => Math.random() - 0.5);
 
 // =========================================
-// 3. TRỒNG HOA VÀ GẮN TƯƠNG TÁC
+// 3. TRỒNG HOA VÀ GẮN TƯƠNG TÁC (TỐI ƯU DOM)
 // =========================================
 const actualNumFlowers = Math.min(numFlowers, gridPositions.length);
+const fragment = document.createDocumentFragment(); // Tối ưu hóa hiệu suất vẽ
 
 for (let i = 0; i < actualNumFlowers; i++) {
     const flower = document.createElement('div');
@@ -107,14 +115,19 @@ for (let i = 0; i < actualNumFlowers; i++) {
         
         popup.classList.remove('hidden');
         
-        // Hiệu ứng gõ chữ cho lời chúc
-        wishText.innerHTML = "";
+        // Hiệu ứng gõ chữ mượt mà hơn với con trỏ nhấp nháy
+        wishText.innerHTML = '<span class="text-content"></span><span class="typing-cursor">|</span>';
+        const textContent = wishText.querySelector('.text-content');
+        const cursor = wishText.querySelector('.typing-cursor');
+        
         let j = 0;
         function typingWish() {
             if (j < personalizedWish.length) {
-                wishText.innerHTML += personalizedWish.charAt(j);
+                textContent.innerHTML += personalizedWish.charAt(j);
                 j++;
-                setTimeout(typingWish, 50);
+                setTimeout(typingWish, 40);
+            } else {
+                cursor.style.display = 'none'; // Ẩn con trỏ khi gõ xong
             }
         }
         typingWish();
@@ -122,8 +135,9 @@ for (let i = 0; i < actualNumFlowers; i++) {
 
     flower.addEventListener('click', showWish);
     flower.addEventListener('touchstart', showWish, { passive: true });
-    ground.appendChild(flower);
+    fragment.appendChild(flower);
 }
+ground.appendChild(fragment); // Render 1 lần duy nhất
 
 // =========================================
 // 4. KỊCH BẢN ĐIỆN ẢNH (BẤM NÚT)
@@ -140,6 +154,14 @@ function handleStart() {
     if (name) userName = name; 
     if (wishTitle) wishTitle.innerText = `💌 Gửi tặng ${userName}`;
     document.title = `Gửi tặng ${userName} 🌸`;
+
+    // Ép trình duyệt tải âm thanh ngay lập tức (Audio Preload Trick)
+    bgMusic.volume = 0;
+    bgMusic.play().then(() => {
+        bgMusic.pause();
+        bgMusic.currentTime = 0;
+        bgMusic.volume = 1;
+    }).catch(e => console.log("Audio unlock failed:", e));
 
     introScreen.style.opacity = '0';
     setTimeout(() => { introScreen.style.display = 'none'; }, 500);    
@@ -161,83 +183,78 @@ nameInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleSta
 // 5. GÕ THƠ, HIỆN TRĂNG VÀ ĐIỂM ĐỈNH CAO
 // =========================================
 function typeSkyPoem() {
-    console.log("Bắt đầu gõ thơ...");
     const element = document.getElementById('sky-poem');
     const moon = document.getElementById('moon');
     if (!element || !moon) return;
     
     const text = element.getAttribute('data-text');
-    element.innerHTML = ""; 
+    
+    // Thêm con trỏ nhấp nháy cho thơ
+    element.innerHTML = '<span class="text-content"></span><span class="typing-cursor" style="color:#ff3366">|</span>'; 
+    const textContent = element.querySelector('.text-content');
+    const cursor = element.querySelector('.typing-cursor');
+    
     let i = 0;
-    const speed = 100;
+    const speed = 90;
 
     function typing() {
         if (i < text.length) {
             let char = text.charAt(i);
-            element.innerHTML += (char === '|') ? "<br>" : char;
+            textContent.innerHTML += (char === '|') ? "<br>" : char;
             i++;
             setTimeout(typing, speed);
         } else {
-            console.log("Đã gõ xong, chờ 10s...");
-            // Chờ 10 giây cho người dùng ngắm thơ
+            cursor.style.display = 'none'; // Tắt con trỏ
+            // Chờ 6 giây cho người dùng ngắm thơ (giảm từ 10s để đỡ sốt ruột)
             setTimeout(() => {
                 element.classList.add('poem-fade-out'); 
                 
                 setTimeout(() => {
                     moon.classList.add('moon-activate'); 
-                    console.log("Trăng đã hiện, sẵn sàng click!");
                     moon.addEventListener('click', triggerClimax, { once: true });
                 }, 1000);
-            }, 10000); 
+            }, 6000); 
         }
     }
     typing();
 }
 
 function triggerClimax() {
-    console.log("Kích hoạt điểm đỉnh cao!");
     const mainFlower = document.querySelector('.flower-main');
     const mainPetals = document.querySelectorAll('.flower-main .flower-petal');
-    const mainCircle = document.querySelector('.flower-main .flower-circle');
     const moon = document.getElementById('moon');
 
-    // Dừng xoay bông hoa chính ngay lập tức để tạo cảm giác "ngưng đọng thời gian"
+    // Dừng xoay bông hoa chính ngay lập tức
     if(mainFlower) mainFlower.style.animationPlayState = 'paused';
+    moon.classList.add('hide-hint'); // Ẩn chữ gợi ý bấm trăng
 
-    // 1. Từng cánh hoa rụng lả tả
+    // 1. Từng cánh hoa rụng lả tả (Nâng cấp quỹ đạo rơi)
     mainPetals.forEach((petal, index) => {
         setTimeout(() => {
-            // Lấy trạng thái hiển thị hiện tại của cánh hoa (tọa độ, góc xoay)
             const currentTransform = window.getComputedStyle(petal).transform;
             
-            // Khóa trạng thái lại, xóa animation cũ để không bị giật
             petal.style.animation = "none";
-            petal.style.opacity = "0.8"; // Đảm bảo cánh hoa vẫn hiện thị
-            petal.style.transform = currentTransform; // Đứng yên tại chỗ
+            petal.style.opacity = "0.9"; 
+            petal.style.transform = currentTransform; 
             
-            // Ép trình duyệt cập nhật thay đổi (reflow)
+            // Ép trình duyệt cập nhật thay đổi
             void petal.offsetWidth;
             
-            // Áp dụng hiệu ứng rơi xuống
-            petal.style.transition = "all 1.5s ease-in";
-            // Rơi xuống 250px, giữ nguyên góc xoay cũ và teo nhỏ dần
-            petal.style.transform = "translateY(250px) " + currentTransform + " scale(0)";
+            // Random hóa quỹ đạo để tạo cảm giác gió thổi
+            const swayX = (Math.random() - 0.5) * 120; // Lắc lư trái phải
+            const rotX = Math.random() * 360; // Xoay 3D trục X
+            const rotY = Math.random() * 360; // Xoay 3D trục Y
+            const rotZ = (Math.random() > 0.5 ? 1 : -1) * (90 + Math.random() * 90);
+            
+            petal.style.transition = "all 2.2s cubic-bezier(0.32, 0, 0.67, 0)"; // Gia tốc rơi tự nhiên
+            // Vừa rụng xuống, vừa lả lướt sang ngang, vừa xoay lộn vòng
+            petal.style.transform = `translate(${swayX}px, 250px) ${currentTransform} rotateX(${rotX}deg) rotateY(${rotY}deg) rotateZ(${rotZ}deg) scale(0)`;
             petal.style.opacity = "0";
             
-        }, index * 300); // Cách nhau 300ms mỗi cánh (0.3 giây)
+        }, index * 250); 
     });
 
-    // Tính tổng thời gian để 8 cánh rụng xong (8 * 300 = 2400ms)
-    const totalDropTime = mainPetals.length * 300;
-
-    // Làm mờ nhụy hoa sau khi cánh đã rụng hết
-    if(mainCircle) {
-        setTimeout(() => {
-            mainCircle.style.transition = "all 1.5s ease";
-            mainCircle.style.opacity = "0";
-            mainCircle.style.transform = "translate(-50%, -50%) scale(0)";
-        }, totalDropTime); 
-    }
+    const totalDropTime = mainPetals.length * 250;
 
     // 2. Chạy nhạc sau khi cánh cuối cùng bắt đầu rụng
     setTimeout(() => {
@@ -258,7 +275,7 @@ function triggerClimax() {
             
         }, 2000); 
         
-    }, totalDropTime + 200); // Nhạc cất lên ngay lúc cánh hoa cuối cùng buông lơi
+    }, totalDropTime + 200); 
 }
 
 // =========================================
