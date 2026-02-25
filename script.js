@@ -12,7 +12,6 @@ const wishes = [
 ];
 let lastWishIndex = -1;
 
-
 const ground = document.getElementById('ground');
 const numFlowers = 70; // Tổng số hoa
 const isMobile = window.innerWidth < 768;
@@ -47,80 +46,94 @@ const flowerHTML = `
     </div>`;
 
 // =========================================
-// 2. CHIA LƯỚI TỌA ĐỘ ĐỂ HOA MỌC ĐỀU
+// 2. RẢI HOA BẰNG TOÁN HỌC (FIBONACCI PHYLLOTAXIS)
 // =========================================
-const rows = isMobile ? 10 : 7; 
-const cols = isMobile ? 7 : 10; 
-const cellWidth = 98 / cols; 
-const heightRange = isMobile ? 32 : 32; 
-const startTop = isMobile ? 65 : 53;
-const cellHeight = heightRange / rows; 
-
 let gridPositions = [];
-for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-        let baseY = startTop + (r * cellHeight) + (cellHeight / 2);
-        let baseX = 2 + (c * cellWidth) + (cellWidth / 2);
-        let jitterY = (Math.random() - 0.5) * (cellHeight * 0.9); 
-        let jitterX = (Math.random() - 0.5) * (cellWidth * 0.9);
-        gridPositions.push({ y: baseY + jitterY, x: baseX + jitterX });
+
+// Tâm của xoắn ốc (Trùng với vị trí bông hoa chính)
+const centerX = 50; 
+const centerY = isMobile ? 75 : 70; 
+
+// Hệ số dãn nở (Ép dẹt trục Y để tạo cảm giác phối cảnh 3D mặt đất)
+const spreadX = isMobile ? 6 : 4.5; 
+const spreadY = isMobile ? 2 : 2; 
+
+// Góc vàng (Golden Angle) tính bằng radian
+const goldenAngle = 137.5 * (Math.PI / 180);
+
+let n = 2; // Bỏ qua vài n đầu tiên để chừa chỗ trống cho bông hoa chính ở giữa
+let added = 0;
+
+while (added < numFlowers) {
+    let radius = Math.sqrt(n);
+    let angle = n * goldenAngle;
+
+    // Chuyển sang tọa độ Descartes và áp dụng hệ số phối cảnh
+    let posX = centerX + (radius * Math.cos(angle) * spreadX);
+    let posY = centerY + (radius * Math.sin(angle) * spreadY);
+
+    // Thêm một chút nhiễu (jitter) nhỏ để khu vườn trông tự nhiên
+    let jitterX = (Math.random() - 0.5) * 1.5;
+    let jitterY = (Math.random() - 0.5) * 1;
+
+    // Chỉ giữ lại những tọa độ nằm trong khu vực mặt đất an toàn
+    if (posX > 2 && posX < 98 && posY > 53 && posY < 95) {
+        gridPositions.push({ 
+            x: posX + jitterX, 
+            y: posY + jitterY
+            // Mảng tự động sắp xếp theo n (từ tâm ra ngoài) để lát nữa làm hiệu ứng gợn sóng
+        });
+        added++;
     }
+    n++;
+    if (n > 1000) break; // An toàn chống treo trình duyệt
 }
-gridPositions.sort(() => Math.random() - 0.5);
 
 // =========================================
 // 3. TRỒNG HOA VÀ GẮN TƯƠNG TÁC (TỐI ƯU DOM)
 // =========================================
-const actualNumFlowers = Math.min(numFlowers, gridPositions.length);
-const fragment = document.createDocumentFragment(); // Tối ưu hóa hiệu suất vẽ
+const fragment = document.createDocumentFragment();
 
-for (let i = 0; i < actualNumFlowers; i++) {
+// Hàm xử lý click hiển thị lời chúc
+const showWish = (e) => {
+    const popup = document.getElementById('wish-popup');
+    const wishText = document.getElementById('wish-text');
+    let randomIndex;
+    do {
+        randomIndex = Math.floor(Math.random() * wishes.length);
+    } while (randomIndex === lastWishIndex && wishes.length > 1);
+    
+    lastWishIndex = randomIndex;
+    let rawWish = wishes[randomIndex];
+    let personalizedWish = rawWish.replace(/cậu/gi, userName);
+    
+    popup.classList.remove('hidden');
+    wishText.innerHTML = personalizedWish;
+};
+
+// 3.1 Trồng Bông Hoa Chính (Nằm ở trung tâm)
+const mainFlower = document.createElement('div');
+mainFlower.className = 'flower-container flower-main';
+mainFlower.style.setProperty('--hue', Math.floor(Math.random() * 120) + 180);
+mainFlower.style.top = `${centerY}%`;
+mainFlower.style.left = `${centerX}%`;
+mainFlower.style.width = `${5.5 * sizeMultiplier}%`;
+mainFlower.style.zIndex = Math.floor(centerY);
+mainFlower.innerHTML = flowerHTML;
+mainFlower.addEventListener('click', showWish);
+mainFlower.addEventListener('touchstart', showWish, { passive: true });
+fragment.appendChild(mainFlower);
+
+// 3.2 Trồng Các Bông Hoa Phụ (Theo tọa độ toán học)
+for (let i = 0; i < gridPositions.length; i++) {
     const flower = document.createElement('div');
     flower.className = 'flower-container';
-    const randomHue = Math.floor(Math.random() * 120) + 180;    
-    let topPos, leftPos, size, zIndex;
-
-    if (i === 0) {
-        topPos = isMobile ? 72 : 70; 
-        leftPos = 50; 
-        size = 5.5 * sizeMultiplier;
-        flower.classList.add('flower-main'); 
-    } else {
-        topPos = gridPositions[i].y;
-        leftPos = gridPositions[i].x;
-        size = 4.5 * sizeMultiplier; 
-    }
-    
-    zIndex = Math.floor(topPos);
-    flower.style.setProperty('--hue', randomHue);
-    flower.style.top = `${topPos}%`;
-    flower.style.left = `${leftPos}%`;
-    flower.style.width = `${size}%`;
-    flower.style.zIndex = zIndex;
+    flower.style.setProperty('--hue', Math.floor(Math.random() * 120) + 180);
+    flower.style.top = `${gridPositions[i].y}%`;
+    flower.style.left = `${gridPositions[i].x}%`;
+    flower.style.width = `${4.5 * sizeMultiplier}%`;
+    flower.style.zIndex = Math.floor(gridPositions[i].y);
     flower.innerHTML = flowerHTML;
-
-    const showWish = (e) => {
-        const popup = document.getElementById('wish-popup');
-        const wishText = document.getElementById('wish-text');
-        
-        let randomIndex;
-        
-        // Rút thăm ngẫu nhiên, nếu trùng câu vừa rồi thì rút lại
-        do {
-            randomIndex = Math.floor(Math.random() * wishes.length);
-        } while (randomIndex === lastWishIndex && wishes.length > 1);
-        
-        // Cập nhật lại câu vừa rút
-        lastWishIndex = randomIndex;
-
-        let rawWish = wishes[randomIndex];
-        let personalizedWish = rawWish.replace(/cậu/gi, userName);
-        
-        popup.classList.remove('hidden');
-        
-        // Hiệu ứng gõ chữ mượt mà hơn với con trỏ nhấp nháy
-        wishText.innerHTML = personalizedWish;
-    };
 
     flower.addEventListener('click', showWish);
     flower.addEventListener('touchstart', showWish, { passive: true });
@@ -147,13 +160,8 @@ function handleStart() {
     introScreen.style.opacity = '0';
     setTimeout(() => { introScreen.style.display = 'none'; }, 500);    
     
-    // Thu phóng mặt đất
     ground.classList.add('start-zoom');
-    
-    // Giai đoạn 1: Chỉ mọc DUY NHẤT 1 bông hoa chính
     document.querySelector('.flower-main').classList.add('animate');
-
-    // Đợi bông hoa nở xong (1.5s) rồi gõ thơ
     setTimeout(typeSkyPoem, 1500); 
 }
 
@@ -169,8 +177,6 @@ function typeSkyPoem() {
     if (!element || !moon) return;
     
     const text = element.getAttribute('data-text');
-    
-    // Thêm con trỏ nhấp nháy cho thơ
     element.innerHTML = '<span class="text-content"></span><span class="typing-cursor" style="color:#ff3366">|</span>'; 
     const textContent = element.querySelector('.text-content');
     const cursor = element.querySelector('.typing-cursor');
@@ -185,11 +191,9 @@ function typeSkyPoem() {
             i++;
             setTimeout(typing, speed);
         } else {
-            cursor.style.display = 'none'; // Tắt con trỏ
-            // Chờ 6 giây cho người dùng ngắm thơ (giảm từ 10s để đỡ sốt ruột)
+            cursor.style.display = 'none'; 
             setTimeout(() => {
                 element.classList.add('poem-fade-out'); 
-                
                 setTimeout(() => {
                     moon.classList.add('moon-activate'); 
                     moon.addEventListener('click', triggerClimax, { once: true });
@@ -207,16 +211,11 @@ function triggerClimax() {
 
     if(mainFlower) mainFlower.style.animationPlayState = 'paused';
     moon.classList.add('hide-hint');
-
-    // --- MỚI: BẮT ĐẦU ZOOM CẬN CẢNH ---
-    // Ngay khi bấm trăng, camera từ từ tiến lại gần bông hoa chính
     document.body.classList.add('camera-zoom-in');
-    // ----------------------------------
 
-    // 1. Từng cánh hoa rụng lả tả
+    // Từng cánh hoa rụng lả tả
     mainPetals.forEach((petal, index) => {
         setTimeout(() => {
-            // ... (Giữ nguyên code xử lý cánh hoa rụng ở đây) ...
             const currentTransform = window.getComputedStyle(petal).transform;
             petal.style.animation = "none";
             petal.style.opacity = "0.9"; 
@@ -238,27 +237,27 @@ function triggerClimax() {
         bgMusic.play();
         
         setTimeout(() => {
-   
             document.body.classList.remove('camera-zoom-in'); 
             document.body.classList.add('camera-zoom-out');   
-
             document.body.classList.add('daytime'); 
             moon.style.opacity = "0";
             moon.style.transform = "translate(-50%, -50%) scale(0)";
 
+            // Hiệu ứng hoa nở lan tỏa (Ripple Effect)
             flowers.forEach((f, idx) => {
                 if(!f.classList.contains('flower-main')) {
-                    setTimeout(() => f.classList.add('animate'), idx * 25);
+                    // Càng xa tâm (idx càng lớn), hoa nở càng trễ, tạo làn sóng
+                    setTimeout(() => f.classList.add('animate'), idx * 50);
                 }
             });
             
         }, 5500); 
-        
     }, totalDropTime + 200); 
 }
 
-
+// =========================================
 // 6. HIỆU ỨNG OUTRO (Trái tim sao)
+// =========================================
 function createStars() {
     for (let i = 0; i < (isMobile ? 50 : 100); i++) {
         const star = document.createElement('div');
@@ -295,22 +294,15 @@ document.getElementById('close-wish').onclick = () => document.getElementById('w
 // 7. TẠO MÂY BAN NGÀY
 // =========================================
 function createClouds() {
-    const numClouds = isMobile ? 4 : 7; // Mobile ít mây hơn cho thoáng màn hình
+    const numClouds = isMobile ? 4 : 7;
     for (let i = 0; i < numClouds; i++) {
         const cloud = document.createElement('div');
         cloud.className = 'cloud';
-        
-        // Đặt mây rải rác ở phần trên của bầu trời
         cloud.style.top = (Math.random() * 35 + 5) + '%'; 
         cloud.style.left = (Math.random() * 80) + '%';
-        
-        // Kích thước to nhỏ khác nhau
         const scale = 0.4 + Math.random() * 0.6;
         cloud.style.setProperty('--scale', scale);
-        
-        // Tốc độ trôi bồng bềnh khác nhau
         cloud.style.animationDuration = (Math.random() * 10 + 15) + 's';
-        
         document.body.appendChild(cloud);
     }
 }
