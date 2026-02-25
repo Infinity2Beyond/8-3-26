@@ -55,7 +55,7 @@ const centerX = 50;
 const centerY = isMobile ? 75 : 70; 
 
 // Hệ số dãn nở (Ép dẹt trục Y để tạo cảm giác phối cảnh 3D mặt đất)
-const spreadX = isMobile ? 6 : 4.5; 
+const spreadX = isMobile ? 7 : 4.5; 
 const spreadY = isMobile ? 2 : 2; 
 
 // Góc vàng (Golden Angle) tính bằng radian
