@@ -252,7 +252,7 @@ function triggerClimax() {
                 }
             });
             
-        }, 300); 
+        }, 5500); 
         
     }, totalDropTime + 200); 
 }
