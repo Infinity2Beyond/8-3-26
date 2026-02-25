@@ -401,7 +401,45 @@ body.daytime .cloud {
     opacity: 1;
     transform: translateX(-50%) translateY(0); /* Trôi về đúng vị trí */
 }
+.god-rays {
+    position: fixed;
+    /* Mở rộng không gian làm việc ra gấp đôi để khi xoay tia sáng không bị hụt góc */
+    top: -50%; 
+    left: -50%; 
+    width: 200vw; 
+    height: 200vh;
+    
+    /* Phân bổ luồng sáng tỏa ra từ một tâm điểm trên cao (như hệ tọa độ cực) */
+    background: repeating-conic-gradient(
+        from 0deg at 50% 10%, /* Tâm sáng đặt ở giữa, hơi lệch xuống một chút so với viền trên */
+        rgba(255, 255, 255, 0) 0deg,
+        rgba(255, 255, 255, 0.15) 4deg,
+        rgba(255, 255, 255, 0) 8deg
+    );
+    
+    pointer-events: none; /* Không cản trở click chuột */
+    z-index: -1; /* Đặt dưới hoa, mây và chữ, nhưng trên nền gradient của bầu trời */
+    opacity: 0; /* Ẩn mình trong bóng tối chờ thời cơ */
+    mix-blend-mode: overlay; /* Kỹ thuật hòa trộn ánh sáng gắt vào nền trời */
+    
+    /* Thiết lập động học: Tâm xoay trùng với tâm phát sáng */
+    transform-origin: 50% 10%; 
+    animation: swayRays 15s ease-in-out infinite alternate; /* Quỹ đạo lắc lư chậm rãi */
+    
+    /* Thời gian chuyển đổi chờ 1.5s để khớp với nhịp nổ của bản nhạc và lúc mây hiện ra */
+    transition: opacity 4s ease-in-out 1.5s; 
+}
 
+/* Khi màn đêm bị phá vỡ (class daytime xuất hiện), ánh sáng bùng lên */
+body.daytime .god-rays {
+    opacity: 1;
+}
+
+/* Biến đổi ma trận góc xoay để chùm sáng lay động tự nhiên */
+@keyframes swayRays {
+    0% { transform: rotate(-3deg); }
+    100% { transform: rotate(3deg); }
+}
 /* --- RESPONSIVE MOBILE --- */
 @media (max-width: 768px) {
     .ground::before, .ground::after { 

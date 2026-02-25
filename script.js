@@ -258,7 +258,7 @@ function triggerClimax() {
             const dayWish = document.createElement('div');
             dayWish.className = 'daylight-wish';
             // Dùng biến userName để lời chúc mang tính cá nhân hóa
-            dayWish.innerHTML = `Chúc ${userName} luôn rực rỡ<br>như những đóa hoa này nhé!`;
+            dayWish.innerHTML = `Chúc ${userName} luôn rực rỡ<br>như những đóa hoa này nha!`;
             document.body.appendChild(dayWish);
             
             // Chờ mặt trời lên hẳn (khoảng 1.5s) rồi từ từ hiện chữ cho tăng phần kịch tính
