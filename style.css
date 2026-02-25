@@ -20,7 +20,6 @@ body {
 
     transition: opacity 1s ease-in-out, background 2s ease, transform 3s ease-in-out;
     
-    /* Thêm dòng này để đặt tâm zoom vào khoảng giữa phần dưới màn hình (nơi có bông hoa chính) */
     transform-origin: center 70%;
 }
 
