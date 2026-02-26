@@ -493,7 +493,7 @@ body.daytime .god-rays {
     #sky-poem { font-size: 22px; padding: 0 20px; }
     #moon { width: 70px; height: 70px; }
     .wish-content { width: 85%; padding: 30px 20px; }
-    .sky-heart { width: 200px; transform: translate(-50%, -50%); top: 45%; }
+    .sky-heart { width: 200px; transform: translate(-50%, -50%); top: 40%; }
 
     .daylight-wish { 
         font-size: 28px; 
