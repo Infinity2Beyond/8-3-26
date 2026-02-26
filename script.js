@@ -183,8 +183,6 @@ function handleStart() {
     if (name) userName = name; 
     if (wishTitle) wishTitle.innerText = `💌 Gửi tặng ${userName}`;
     document.title = `Gửi tặng ${userName} 🌸`;
-    window.scrollTo(0, 0);
-    document.body.scrollTop = 0;
     introScreen.style.opacity = '0';
     setTimeout(() => { introScreen.style.display = 'none'; }, 500);    
     
