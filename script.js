@@ -1,8 +1,3 @@
-const setAppHeight = () => {
-    document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
-};
-setAppHeight();
-
 let userName = "cậu";
 let isWishLocked = false;
 // =========================================
@@ -183,24 +178,40 @@ const wishTitle = document.getElementById('wish-title');
 const introScreen = document.getElementById('intro-screen');
 
 function handleStart() {
-    nameInput.blur(); // Cất bàn phím
-    window.scrollTo(0, 0); // Ép trả về tọa độ gốc nếu iOS lỡ cuộn trang
-
-    introScreen.style.opacity = '0';
+    // 1. Ép cất bàn phím
+    nameInput.blur();
+    
+    // 2. Khóa bấm nhầm và thu thập tên
     introScreen.style.pointerEvents = 'none';
+    let name = nameInput.value.trim();
+    if (name) userName = name; 
+    if (wishTitle) wishTitle.innerText = `💌 Gửi tặng ${userName}`;
+    document.title = `Gửi tặng ${userName} 🌸`;
 
+    // 3. Cho màn hình Intro mờ dần đi
+    introScreen.style.opacity = '0';
+
+    // 4. Đợi 600ms cho Intro mờ hẳn VÀ bàn phím thụt xuống xong xuôi
     setTimeout(() => {
-        let name = nameInput.value.trim();
-        if (name) userName = name; 
-        if (wishTitle) wishTitle.innerText = `💌 Gửi tặng ${userName}`;
-        document.title = `Gửi tặng ${userName} 🌸`;
+        introScreen.style.display = 'none'; // Xóa sổ intro
+        window.scrollTo(0, 0); // Ép trang về tọa độ gốc cho chắc ăn
+
+        const mainScene = document.getElementById('main-scene');
+        mainScene.style.display = 'block'; // Đưa khu vườn vào lại DOM
         
-        introScreen.style.display = 'none';
+        // Trick nhỏ: Ép trình duyệt tính lại CSS trước khi cho hiện hình
+        void mainScene.offsetWidth; 
         
+        mainScene.style.opacity = '1'; // Hiện rõ khu vườn ra
+
+        // Khởi động các hiệu ứng
         ground.classList.add('start-zoom');
-        document.querySelector('.flower-main').classList.add('animate');
+        const mainFlower = document.querySelector('.flower-main');
+        if (mainFlower) mainFlower.classList.add('animate');
+        
         setTimeout(typeSkyPoem, 1500); 
-    }, 100); 
+
+    }, 600); 
 }
 
 startBtn.addEventListener('click', handleStart);

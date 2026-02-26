@@ -3,23 +3,23 @@
 }
 html, body {
     width: 100vw;
-    /* Dùng biến do JS cung cấp, nếu JS lỗi thì xài tạm 100vh */
-    height: var(--app-height, 100vh); 
-    overscroll-behavior: none; 
+    height: 100vh;
+    max-width: 100%;
+    overscroll-behavior: none; /* Ngăn hiệu ứng vuốt nảy của iPhone */
 }
-
+/* --- TỐI ƯU UX (Chống chạm lỗi trên mobile) --- */
 body {
-    user-select: none;
-    -webkit-tap-highlight-color: transparent;
+    user-select: none; /* Chống bôi đen vô ý */
+    -webkit-tap-highlight-color: transparent; /* Bỏ khung xanh khi bấm trên điện thoại */
     touch-action: manipulation;
+    
     background: linear-gradient(to bottom, #020111 0%, #20124d 50%, #0c2012 100%);
-    margin: 0; padding: 0; 
-    
-    height: var(--app-height, 100vh); /* Khóa chặt chiều cao */
-    
+    margin: 0; padding: 0; height: 100vh;
     display: flex; justify-content: center; align-items: center;
     overflow: hidden; font-family: sans-serif; position: relative;
+
     transition: opacity 1s ease-in-out, background 2s ease, transform 3s ease-in-out;
+    
     transform-origin: center 70%;
 }
 
@@ -148,9 +148,7 @@ body.daytime::after { opacity: 1; }
 body.daytime .ground::after { opacity: 1; }
 
 .ground {
-    width: 100vw; 
-    height: var(--app-height, 100vh); /* Khóa chặt chiều cao */
-    position: absolute; top: 0; left: 0;
+    width: 100vw; height: 100vh; position: absolute; top: 0; left: 0;
     z-index: 1; transform-origin: 50% 70%; transform: scale(2.5); 
 }
 .ground.start-zoom { animation: shrink 1.5s ease-in-out forwards 1.5s; }
@@ -481,6 +479,16 @@ body.daytime .god-rays {
         transform: translate3d(var(--endX), var(--endY), 0) rotateX(var(--rotX)) rotateY(var(--rotY)) rotateZ(var(--rotZ)) scale(1.2);
         opacity: 0;
     }
+}
+
+.hidden-scene {
+    display: none; /* Xóa hoàn toàn khỏi không gian hiển thị */
+    opacity: 0;
+    width: 100vw;
+    height: 100dvh; /* Dùng dvh chuẩn mực */
+    position: absolute;
+    top: 0; left: 0;
+    transition: opacity 1s ease-in-out;
 }
 
 /* --- RESPONSIVE MOBILE --- */
