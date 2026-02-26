@@ -53,7 +53,7 @@ let gridPositions = [];
 
 // Tâm của xoắn ốc (Trùng với vị trí bông hoa chính)
 const centerX = 50; 
-const centerY = isMobile ? 75 : 70; 
+const centerY = isMobile ? 80 : 70; 
 
 // Hệ số dãn nở (Ép dẹt trục Y để tạo cảm giác phối cảnh 3D mặt đất)
 const spreadX = isMobile ? 7 : 4.5; 
@@ -78,10 +78,11 @@ while (added < numFlowers) {
     let jitterY = (Math.random() - 0.5) * 1;
 
     // Chỉ giữ lại những tọa độ nằm trong khu vực mặt đất an toàn
-    if (posX > 2 && posX < 98 && posY > 53 && posY < 88) {
+    if (posX > 2 && posX < 98 && posY > 53 && posY < 95) {
         gridPositions.push({ 
             x: posX + jitterX, 
             y: posY + jitterY
+            // Mảng tự động sắp xếp theo n (từ tâm ra ngoài) để lát nữa làm hiệu ứng gợn sóng
         });
         added++;
     }
