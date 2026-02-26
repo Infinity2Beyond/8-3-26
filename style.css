@@ -1,25 +1,27 @@
 * {
     box-sizing: border-box;
 }
-html, body {
-    width: 100vw;
-    height: 100dvh;
-    max-width: 100%;
-    overscroll-behavior: none; /* Ngăn hiệu ứng vuốt nảy của iPhone */
+html {
+    height: 100vh;
+    /* Dòng này cực quan trọng: Khắc tinh của thanh điều hướng Safari */
+    height: -webkit-fill-available; 
 }
-/* --- TỐI ƯU UX (Chống chạm lỗi trên mobile) --- */
+
 body {
-    user-select: none; /* Chống bôi đen vô ý */
-    -webkit-tap-highlight-color: transparent; /* Bỏ khung xanh khi bấm trên điện thoại */
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
     
     background: linear-gradient(to bottom, #020111 0%, #20124d 50%, #0c2012 100%);
-    margin: 0; padding: 0; height: 100vh;
+    margin: 0; padding: 0; 
+    
+    height: 100vh;
+    min-height: -webkit-fill-available; /* Vá lỗi thiếu đáy trên iPhone */
+    
     display: flex; justify-content: center; align-items: center;
     overflow: hidden; font-family: sans-serif; position: relative;
 
     transition: opacity 1s ease-in-out, background 2s ease, transform 3s ease-in-out;
-    
     transform-origin: center 70%;
 }
 
@@ -148,7 +150,7 @@ body.daytime::after { opacity: 1; }
 body.daytime .ground::after { opacity: 1; }
 
 .ground {
-    width: 100vw; height: 100dvh; position: absolute; top: 0; left: 0;
+    width: 100vw; height: 100vh; height: -webkit-fill-available; position: absolute; top: 0; left: 0;
     z-index: 1; transform-origin: 50% 70%; transform: scale(2.5); 
 }
 .ground.start-zoom { animation: shrink 1.5s ease-in-out forwards 1.5s; }

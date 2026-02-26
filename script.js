@@ -178,33 +178,39 @@ const wishTitle = document.getElementById('wish-title');
 const introScreen = document.getElementById('intro-screen');
 
 function handleStart() {
-    // 1. Ép cất bàn phím ngay lập tức
+    // 1. Ép mất tiêu điểm để bàn phím ảo thụt xuống ngay lập tức
     nameInput.blur();
-    
-    // 2. Ép cuộn trang về tọa độ (0,0) LIÊN TỤC mỗi 20ms để chống lại animation của iOS
-    let forceScroll = setInterval(() => {
-        window.scrollTo(0, 0);
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
-    }, 20);
+    document.activeElement.blur(); 
 
-    // 3. Đợi bàn phím cất xong hoàn toàn (khoảng 600ms) mới tắt bộ ép cuộn và chạy kịch bản
+    // 2. Tạm ẩn giao diện nhập tên trước cho mượt
+    introScreen.style.opacity = '0';
+    introScreen.style.pointerEvents = 'none'; // Không cho bấm nhầm nữa
+
+    // 3. Đợi đúng nửa giây (500ms) để bàn phím cất xong hoàn toàn
     setTimeout(() => {
-        clearInterval(forceScroll); // Tắt bộ ép cuộn
-        window.scrollTo(0, 0); // Chốt chặn lần cuối cùng cho chắc chắn
+        // --- THỦ THUẬT ÉP RESET MÀN HÌNH ---
+        window.scrollTo(0, 0); // Kéo trang về lại trên cùng
+        document.body.style.display = 'none'; // Tắt màn hình chớp nhoáng
+        document.body.offsetHeight; // Kích hoạt Reflow (Bắt trình duyệt tính lại chiều cao thực)
+        document.body.style.display = ''; // Bật lại màn hình
+        // -----------------------------------
 
+        // Khởi tạo các giá trị
         let name = nameInput.value.trim();
         if (name) userName = name; 
         if (wishTitle) wishTitle.innerText = `💌 Gửi tặng ${userName}`;
         document.title = `Gửi tặng ${userName} 🌸`;
         
-        introScreen.style.opacity = '0';
-        setTimeout(() => { introScreen.style.display = 'none'; }, 500);    
-        
+        introScreen.style.display = 'none'; // Xóa hẳn màn hình intro
+
+        // 4. BÂY GIỜ mới bắt đầu chạy hiệu ứng (khi màn hình đã chuẩn kích thước)
         ground.classList.add('start-zoom');
-        document.querySelector('.flower-main').classList.add('animate');
+        const mainFlower = document.querySelector('.flower-main');
+        if (mainFlower) mainFlower.classList.add('animate');
+        
         setTimeout(typeSkyPoem, 1500); 
-    }, 600); // 600ms là thời gian vàng để Safari xử lý xong viewport
+
+    }, 500); // Khoảng thời gian vàng để hệ điều hành điện thoại xử lý
 }
 
 startBtn.addEventListener('click', handleStart);
