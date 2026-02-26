@@ -484,7 +484,7 @@ body.daytime .god-rays {
 /* --- RESPONSIVE MOBILE --- */
 @media (max-width: 768px) {
     .ground::before, .ground::after { 
-        height: 45%; 
+        height: 35%; 
         width: 150%; 
         left: -25%; 
         border-radius: 50% 50% 0 0 / 15% 15% 0 0; 
