@@ -25,7 +25,7 @@ body {
 
 body.camera-zoom-in {
     /* Phóng to 1.8 lần và kéo nhẹ xuống để tập trung vào bông hoa chính */
-    transform: scale(1.8) translateY(-5%); 
+    transform: scale(1.8) translateY(-15%); 
     /* Thời gian zoom vào chậm rãi, kịch tính (khoảng 4s) */
     transition: transform 4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -216,8 +216,12 @@ body.daytime #moon {
     justify-items: center; align-items: center; transform-origin: bottom center;
     cursor: pointer; transition: transform 0.2s, filter 0.2s;
     transform: translateZ(0); will-change: transform;
+    transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.3s ease !important;
 }
-.flower-container:hover, .flower-container:active { transform: scale(1.15) !important; z-index: 9999 !important; }
+.flower-container:hover, .flower-container.sway { 
+    transform: scale(1.15) rotate(6deg) !important;
+    filter: brightness(1.2) drop-shadow(0 0 5px rgba(255, 255, 255, 0.3));
+}
 .flower-top { width: 100cqi; aspect-ratio: 1.5; position: relative; z-index: 1; position: absolute; bottom: 95%; left: 50%; transform: translate(-50%, 50%); }
 .flower-bottom { width: 6%; aspect-ratio: 0.025; left: 47%; top: 45%; position: absolute; }
 
@@ -293,7 +297,13 @@ body.daytime #moon {
 @keyframes light-float { 0% { opacity: 0; transform: translate(0, 0); } 25% { opacity: 1; transform: translate(20cqi, -25cqi); } 50% { opacity: 1; transform: translate(0, -50cqi); } 75% { opacity: 1; transform: translate(-20cqi, -75cqi); } 100% { opacity: 0; transform: translate(0, -100cqi); } }
 @keyframes petal-soft-bloom { 0% { scale: 0; opacity: 0; } 70% { scale: 1.05; opacity: 0.8; } 100% { scale: 1; opacity: 0.8; } }
 @keyframes circle-soft-bloom { 0% { scale: 0; opacity: 0; } 70% { scale: 1.05; opacity: 1; } 100% { scale: 1; opacity: 1; } }
-
+@keyframes sway-flower {
+    0% { transform: scale(1.15) rotate(0deg); }
+    25% { transform: scale(1.15) rotate(-15deg); }
+    50% { transform: scale(1.15) rotate(10deg); }
+    75% { transform: scale(1.15) rotate(-5deg); }
+    100% { transform: scale(1.15) rotate(0deg); }
+}
 /* --- POPUP LỜI CHÚC --- */
 #wish-popup {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;

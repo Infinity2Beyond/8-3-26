@@ -1,5 +1,5 @@
 let userName = "cậu";
-let isGameStarted = false;
+let isWishLocked = false;
 // =========================================
 // 1. KHAI BÁO CẤU HÌNH & DANH SÁCH LỜI CHÚC
 // =========================================
@@ -14,7 +14,7 @@ const wishes = [
 let lastWishIndex = -1;
 
 const ground = document.getElementById('ground');
-const numFlowers = 70; // Tổng số hoa
+const numFlowers = 50; // Tổng số hoa
 const isMobile = window.innerWidth < 768;
 const sizeMultiplier = isMobile ? 1.8 : 1; 
 
@@ -97,7 +97,7 @@ const fragment = document.createDocumentFragment();
 
 // Hàm xử lý click hiển thị lời chúc
 const showWish = (e) => {
-    if (!isGameStarted) return
+    if (isWishLocked) return;
 
     const popup = document.getElementById('wish-popup');
     const wishText = document.getElementById('wish-text');
@@ -142,9 +142,28 @@ for (let i = 0; i < gridPositions.length; i++) {
     flower.style.zIndex = Math.floor(gridPositions[i].y);
     flower.innerHTML = flowerHTML;
 
-    flower.addEventListener('click', showWish);
-    flower.addEventListener('touchstart', showWish, { passive: true });
+    // flower.addEventListener('click', showWish);
+    // flower.addEventListener('touchstart', showWish, { passive: true });
+    flower.addEventListener('dblclick', showWish);
     fragment.appendChild(flower);
+    let lastTap = 0;
+    flower.addEventListener('touchstart', (e) => {
+        const currentTime = new Date().getTime();
+        const tapLength = currentTime - lastTap;
+        
+        // Nếu khoảng cách giữa 2 lần chạm nhỏ hơn 300ms -> Mở thiệp
+        if (tapLength < 300 && tapLength > 0) {
+            showWish(e);
+            e.preventDefault(); // Chống zoom màn hình trên mobile
+        } else {
+            // Chạm 1 lần -> Cho hoa đu đưa
+            if (!flower.classList.contains('sway')) {
+                flower.classList.add('sway');
+                setTimeout(() => flower.classList.remove('sway'), 800);
+            }
+        }
+        lastTap = currentTime;
+    }, { passive: false });
 }
 ground.appendChild(fragment); // Render 1 lần duy nhất
 
@@ -205,7 +224,6 @@ function typeSkyPoem() {
                 setTimeout(() => {
                     moon.classList.add('moon-activate'); 
                     moon.addEventListener('click', triggerClimax, { once: true });
-                    isGameStarted = false;    
                 }, 1000);
             }, 6000); 
         }
@@ -214,6 +232,7 @@ function typeSkyPoem() {
 }
 
 function triggerClimax() {
+    isWishLocked = true
     const mainFlower = document.querySelector('.flower-main');
     const mainPetals = document.querySelectorAll('.flower-main .flower-petal');
     const moon = document.getElementById('moon');
@@ -277,7 +296,7 @@ function triggerClimax() {
             setTimeout(() => {
                 dayWish.classList.add('show');
                 createBlowingPetals()
-                isGameStarted = true;
+                isWishLocked = false
             }, 2500);
     }, 4500); 
 }
@@ -339,7 +358,7 @@ createClouds();
 // 8. HỆ THỐNG HẠT: CÁNH HOA BAY TRONG GIÓ
 // =========================================
 function createBlowingPetals() {
-    const numPetals = isMobile ? 100 : 200; // Mật độ cánh hoa bay cùng lúc
+    const numPetals = isMobile ? 50 : 100; // Mật độ cánh hoa bay cùng lúc
     const container = document.body;
 
     for (let i = 0; i < numPetals; i++) {
@@ -393,3 +412,22 @@ function spawnSinglePetal(container) {
         petal.remove();
     }, duration * 1000);
 }
+
+document.addEventListener('touchmove', (e) => {
+    // Chỉ kích hoạt khi trời đã sáng (hoa đã mọc lên hết)
+    if (!document.body.classList.contains('daytime')) return;
+
+    const touch = e.touches[0];
+    // Dùng tia tọa độ để quét xem ngón tay đang đè lên phần tử nào
+    const element = document.elementFromPoint(touch.clientX, touch.clientY);
+    
+    if (element) {
+        // Nếu lướt trúng đóa hoa, thêm class đu đưa
+        const flower = element.closest('.flower-container');
+        if (flower && !flower.classList.contains('sway')) {
+            flower.classList.add('sway');
+            // Gỡ class sau 0.8s để lần sau lướt qua lại tiếp tục đung đưa
+            setTimeout(() => flower.classList.remove('sway'), 800);
+        }
+    }
+}, { passive: true });
