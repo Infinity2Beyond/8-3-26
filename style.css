@@ -5,7 +5,9 @@ html, body {
     width: 100vw;
     height: 100vh;
     max-width: 100%;
+    position: fixed;
     overscroll-behavior: none; /* Ngăn hiệu ứng vuốt nảy của iPhone */
+    overflow: hidden !important;
 }
 /* --- TỐI ƯU UX (Chống chạm lỗi trên mobile) --- */
 body {
@@ -16,7 +18,7 @@ body {
     background: linear-gradient(to bottom, #020111 0%, #20124d 50%, #0c2012 100%);
     margin: 0; padding: 0; height: 100vh;
     display: flex; justify-content: center; align-items: center;
-    overflow: hidden; font-family: sans-serif; position: relative;
+    font-family: sans-serif; 
 
     transition: opacity 1s ease-in-out, background 2s ease, transform 3s ease-in-out;
     
