@@ -178,17 +178,21 @@ const wishTitle = document.getElementById('wish-title');
 const introScreen = document.getElementById('intro-screen');
 
 function handleStart() {
-    // 1. Ép trình duyệt cất bàn phím ảo đi
-    nameInput.blur(); 
+    // 1. Ép cất bàn phím ngay lập tức
+    nameInput.blur();
     
-    // 2. Ép cuộn trang về lại tọa độ gốc ngay lập tức
-    window.scrollTo(0, 0);
+    // 2. Ép cuộn trang về tọa độ (0,0) LIÊN TỤC mỗi 20ms để chống lại animation của iOS
+    let forceScroll = setInterval(() => {
+        window.scrollTo(0, 0);
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    }, 20);
 
-    // 3. Đợi 400ms để bàn phím iOS thụt hẳn xuống
+    // 3. Đợi bàn phím cất xong hoàn toàn (khoảng 600ms) mới tắt bộ ép cuộn và chạy kịch bản
     setTimeout(() => {
-        // "Vũ khí bí mật": Ép cứng chiều cao body bằng đúng chiều cao cửa sổ hiện tại
-        document.body.style.height = window.innerHeight + 'px';
-        
+        clearInterval(forceScroll); // Tắt bộ ép cuộn
+        window.scrollTo(0, 0); // Chốt chặn lần cuối cùng cho chắc chắn
+
         let name = nameInput.value.trim();
         if (name) userName = name; 
         if (wishTitle) wishTitle.innerText = `💌 Gửi tặng ${userName}`;
@@ -200,7 +204,7 @@ function handleStart() {
         ground.classList.add('start-zoom');
         document.querySelector('.flower-main').classList.add('animate');
         setTimeout(typeSkyPoem, 1500); 
-    }, 400); 
+    }, 600); // 600ms là thời gian vàng để Safari xử lý xong viewport
 }
 
 startBtn.addEventListener('click', handleStart);
