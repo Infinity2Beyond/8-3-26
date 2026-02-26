@@ -1,3 +1,8 @@
+const setAppHeight = () => {
+    document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
+};
+setAppHeight();
+
 let userName = "cậu";
 let isWishLocked = false;
 // =========================================
@@ -178,39 +183,24 @@ const wishTitle = document.getElementById('wish-title');
 const introScreen = document.getElementById('intro-screen');
 
 function handleStart() {
-    // 1. Ép mất tiêu điểm để bàn phím ảo thụt xuống ngay lập tức
-    nameInput.blur();
-    document.activeElement.blur(); 
+    nameInput.blur(); // Cất bàn phím
+    window.scrollTo(0, 0); // Ép trả về tọa độ gốc nếu iOS lỡ cuộn trang
 
-    // 2. Tạm ẩn giao diện nhập tên trước cho mượt
     introScreen.style.opacity = '0';
-    introScreen.style.pointerEvents = 'none'; // Không cho bấm nhầm nữa
+    introScreen.style.pointerEvents = 'none';
 
-    // 3. Đợi đúng nửa giây (500ms) để bàn phím cất xong hoàn toàn
     setTimeout(() => {
-        // --- THỦ THUẬT ÉP RESET MÀN HÌNH ---
-        window.scrollTo(0, 0); // Kéo trang về lại trên cùng
-        document.body.style.display = 'none'; // Tắt màn hình chớp nhoáng
-        document.body.offsetHeight; // Kích hoạt Reflow (Bắt trình duyệt tính lại chiều cao thực)
-        document.body.style.display = ''; // Bật lại màn hình
-        // -----------------------------------
-
-        // Khởi tạo các giá trị
         let name = nameInput.value.trim();
         if (name) userName = name; 
         if (wishTitle) wishTitle.innerText = `💌 Gửi tặng ${userName}`;
         document.title = `Gửi tặng ${userName} 🌸`;
         
-        introScreen.style.display = 'none'; // Xóa hẳn màn hình intro
-
-        // 4. BÂY GIỜ mới bắt đầu chạy hiệu ứng (khi màn hình đã chuẩn kích thước)
-        ground.classList.add('start-zoom');
-        const mainFlower = document.querySelector('.flower-main');
-        if (mainFlower) mainFlower.classList.add('animate');
+        introScreen.style.display = 'none';
         
+        ground.classList.add('start-zoom');
+        document.querySelector('.flower-main').classList.add('animate');
         setTimeout(typeSkyPoem, 1500); 
-
-    }, 500); // Khoảng thời gian vàng để hệ điều hành điện thoại xử lý
+    }, 100); 
 }
 
 startBtn.addEventListener('click', handleStart);
