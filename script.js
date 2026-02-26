@@ -78,11 +78,10 @@ while (added < numFlowers) {
     let jitterY = (Math.random() - 0.5) * 1;
 
     // Chỉ giữ lại những tọa độ nằm trong khu vực mặt đất an toàn
-    if (posX > 2 && posX < 98 && posY > 53 && posY < 95) {
+    if (posX > 2 && posX < 98 && posY > 53 && posY < 88) {
         gridPositions.push({ 
             x: posX + jitterX, 
             y: posY + jitterY
-            // Mảng tự động sắp xếp theo n (từ tâm ra ngoài) để lát nữa làm hiệu ứng gợn sóng
         });
         added++;
     }
