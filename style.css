@@ -11,7 +11,7 @@ html, body {
 body {
     user-select: none; /* Chống bôi đen vô ý */
     -webkit-tap-highlight-color: transparent; /* Bỏ khung xanh khi bấm trên điện thoại */
-    touch-action: manipulation; /* Khóa double-tap zoom */
+    touch-action: none;
     
     background: linear-gradient(to bottom, #020111 0%, #20124d 50%, #0c2012 100%);
     margin: 0; padding: 0; height: 100vh;

@@ -1,4 +1,5 @@
 let userName = "cậu";
+let isGameStarted = false;
 // =========================================
 // 1. KHAI BÁO CẤU HÌNH & DANH SÁCH LỜI CHÚC
 // =========================================
@@ -96,6 +97,8 @@ const fragment = document.createDocumentFragment();
 
 // Hàm xử lý click hiển thị lời chúc
 const showWish = (e) => {
+    if (!isGameStarted) return
+
     const popup = document.getElementById('wish-popup');
     const wishText = document.getElementById('wish-text');
     let randomIndex;
@@ -156,6 +159,7 @@ const wishTitle = document.getElementById('wish-title');
 const introScreen = document.getElementById('intro-screen');
 
 function handleStart() {
+    isGameStarted = true;
     let name = nameInput.value.trim();
     if (name) userName = name; 
     if (wishTitle) wishTitle.innerText = `💌 Gửi tặng ${userName}`;
