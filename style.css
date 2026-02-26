@@ -440,6 +440,37 @@ body.daytime .god-rays {
     0% { transform: rotate(-3deg); }
     100% { transform: rotate(3deg); }
 }
+
+.blowing-petal {
+    position: fixed;
+    width: 12px;
+    aspect-ratio: 1;
+    /* Kế thừa màu sắc ngẫu nhiên từ JS */
+    background-color: hsl(var(--hue), 100%, 70%);
+    background-image: linear-gradient(135deg, hsl(var(--hue), 100%, 50%) 20%, hsl(var(--hue), 100%, 80%) 80%);
+    /* Vuốt góc để tạo hình cánh hoa giống các bông hoa dưới đất */
+    border-radius: 0px 100% 10% 100% / 0px 100% 5% 100%;
+    
+    pointer-events: none; /* Không cản trở việc click vào hoa */
+    z-index: 998; /* Bay trên hoa, dưới chữ và popup */
+    opacity: 0;
+}
+
+/* Quỹ đạo bay (Trajectory) được nội suy từ điểm bắt đầu đến điểm kết thúc (endX, endY) */
+@keyframes flyingPetal {
+    0% {
+        transform: translate3d(0, 0, 0) rotateX(0) rotateY(0) rotateZ(0) scale(0.6);
+        opacity: 0;
+    }
+    10% { opacity: 0.85; } /* Đạt độ rõ nét khi vừa bốc lên từ cỏ */
+    80% { opacity: 0.85; }
+    100% {
+        /* Bay đến tọa độ đích và lộn vòng liên tục trong không gian 3D */
+        transform: translate3d(var(--endX), var(--endY), 0) rotateX(var(--rotX)) rotateY(var(--rotY)) rotateZ(var(--rotZ)) scale(1.2);
+        opacity: 0;
+    }
+}
+
 /* --- RESPONSIVE MOBILE --- */
 @media (max-width: 768px) {
     .ground::before, .ground::after { 
