@@ -178,17 +178,27 @@ const wishTitle = document.getElementById('wish-title');
 const introScreen = document.getElementById('intro-screen');
 
 function handleStart() {
-    isGameStarted = true;
-    let name = nameInput.value.trim();
-    if (name) userName = name; 
-    if (wishTitle) wishTitle.innerText = `💌 Gửi tặng ${userName}`;
-    document.title = `Gửi tặng ${userName} 🌸`;
-    introScreen.style.opacity = '0';
-    setTimeout(() => { introScreen.style.display = 'none'; }, 500);    
-    
-    ground.classList.add('start-zoom');
-    document.querySelector('.flower-main').classList.add('animate');
-    setTimeout(typeSkyPoem, 1500); 
+    // 1. Ép trình duyệt cất bàn phím ảo đi ngay lập tức
+    nameInput.blur(); 
+
+    // 2. Tạm dừng 400ms để đợi bàn phím thụt xuống hết và màn hình rớt về vị trí cũ
+    setTimeout(() => {
+        isGameStarted = true;
+        let name = nameInput.value.trim();
+        if (name) userName = name; 
+        if (wishTitle) wishTitle.innerText = `💌 Gửi tặng ${userName}`;
+        document.title = `Gửi tặng ${userName} 🌸`;
+        
+        // Căn chỉnh lại thanh cuộn về tọa độ gốc để dọn dẹp tàn dư của bàn phím
+        window.scrollTo(0, 0);
+        
+        introScreen.style.opacity = '0';
+        setTimeout(() => { introScreen.style.display = 'none'; }, 500);    
+        
+        ground.classList.add('start-zoom');
+        document.querySelector('.flower-main').classList.add('animate');
+        setTimeout(typeSkyPoem, 1500); 
+    }, 400); // 400ms là đủ an toàn cho animation đóng bàn phím của iOS/Android
 }
 
 startBtn.addEventListener('click', handleStart);
