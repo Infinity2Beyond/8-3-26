@@ -148,7 +148,7 @@ body.daytime::after { opacity: 1; }
 body.daytime .ground::after { opacity: 1; }
 
 .ground {
-    width: 100vw; height: 100vh; position: absolute; top: 0; left: 0;
+    width: 100vw; height: 100dvh; position: absolute; top: 0; left: 0;
     z-index: 1; transform-origin: 50% 70%; transform: scale(2.5); 
 }
 .ground.start-zoom { animation: shrink 1.5s ease-in-out forwards 1.5s; }

@@ -178,19 +178,21 @@ const wishTitle = document.getElementById('wish-title');
 const introScreen = document.getElementById('intro-screen');
 
 function handleStart() {
-    // 1. Ép trình duyệt cất bàn phím ảo đi ngay lập tức
+    // 1. Ép trình duyệt cất bàn phím ảo đi
     nameInput.blur(); 
+    
+    // 2. Ép cuộn trang về lại tọa độ gốc ngay lập tức
+    window.scrollTo(0, 0);
 
-    // 2. Tạm dừng 400ms để đợi bàn phím thụt xuống hết và màn hình rớt về vị trí cũ
+    // 3. Đợi 400ms để bàn phím iOS thụt hẳn xuống
     setTimeout(() => {
-        isGameStarted = true;
+        // "Vũ khí bí mật": Ép cứng chiều cao body bằng đúng chiều cao cửa sổ hiện tại
+        document.body.style.height = window.innerHeight + 'px';
+        
         let name = nameInput.value.trim();
         if (name) userName = name; 
         if (wishTitle) wishTitle.innerText = `💌 Gửi tặng ${userName}`;
         document.title = `Gửi tặng ${userName} 🌸`;
-        
-        // Căn chỉnh lại thanh cuộn về tọa độ gốc để dọn dẹp tàn dư của bàn phím
-        window.scrollTo(0, 0);
         
         introScreen.style.opacity = '0';
         setTimeout(() => { introScreen.style.display = 'none'; }, 500);    
@@ -198,7 +200,7 @@ function handleStart() {
         ground.classList.add('start-zoom');
         document.querySelector('.flower-main').classList.add('animate');
         setTimeout(typeSkyPoem, 1500); 
-    }, 400); // 400ms là đủ an toàn cho animation đóng bàn phím của iOS/Android
+    }, 400); 
 }
 
 startBtn.addEventListener('click', handleStart);
