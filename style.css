@@ -43,7 +43,7 @@ body.camera-zoom-out {
 .intro-container {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
-    background: url('./images/blossom.png') center/cover no-repeat;
+    background: url('./images/background.jpg') center/cover no-repeat;
     z-index: 999999;
     display: flex;
     justify-content: center;
