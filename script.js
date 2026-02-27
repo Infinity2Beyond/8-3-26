@@ -292,7 +292,7 @@ function triggerClimax() {
             
             // Mờ dần khi bay ra xa
             petal.style.opacity = "0";
-        }, index * 500); // Giảm delay giữa các cánh (từ 250 xuống 150) để bay dồn dập hơn
+        }, index * 1500); // Giảm delay giữa các cánh (từ 250 xuống 150) để bay dồn dập hơn
     });
         
     setTimeout(() => {
@@ -320,7 +320,7 @@ function triggerClimax() {
                 createBlowingPetals()
                 isWishLocked = false
             }, 2500);
-    }, 4500); 
+    }, 10500); 
 }
 
 // =========================================
