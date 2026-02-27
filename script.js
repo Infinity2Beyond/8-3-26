@@ -14,7 +14,7 @@ const wishes = [
 let lastWishIndex = -1;
 
 const ground = document.getElementById('ground');
-const numFlowers = 50; // Tổng số hoa
+const numFlowers = 60; // Tổng số hoa
 const isMobile = window.innerWidth < 768;
 const sizeMultiplier = isMobile ? 1.8 : 1; 
 
